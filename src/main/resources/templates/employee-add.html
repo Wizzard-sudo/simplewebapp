@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление</title>
+    <link th:href="@{/styles/style.css}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <div class="header__inner">
+            <div class="header__logo">SimpleWebApp</div>
+            <nav class="nav">
+                <a class="nav__link" href="/">Назад на главную</a>
+            </nav>
+        </div>
+    </div>
+</header>
+<div class="div_input">
+    <form action="/add" method="post">
+        <b class="b1">Имя: </b><br>
+        <input class= "input_text" type="text" name="firstName" placeholder="Введите имя"><br>
+        <b class="b1">Фамилия: </b><br>
+        <input class= "input_text" type="text" name="lastName" placeholder="Введите фамилию"><br>
+        <b class="b1">Номер департамента: </b><br>
+        <input class= "input_number" type="number" name="departamentId" placeholder="Введите номер департамента"><br>
+        <b class="b1">Должность: </b><br>
+        <input class= "input_text" type="text" name="jobTitle" placeholder="Введите должность"><br>
+        <b class="b1">Пол: </b><br>
+        <label class="gender"><input class="input_gender" type="radio" name="gender" value="MALE"><div class="stlradio"></div>Male</label>
+        <label class="gender"><input class="input_gender" type="radio" name="gender" value="FEMALE"><div class="stlradio"></div>Female</label><br>
+        <b class="b1">Дата рождения: </b><br>
+        <input class="calendar" type="date" name="dateOfBirth" placeholder="Введите дату рождения"><br>
+        <button class="btn" type="submit" >Добавить</button>
+    </form>
+</div>
+
+</body>
+</html>

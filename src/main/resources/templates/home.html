@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Главная страница</title>
+    <link th:href="@{/styles/style.css}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <div class="header__inner">
+            <div class="header__logo">SimpleWebApp</div>
+            <nav class="nav">
+                <a class="nav__link" href="/add">Добавить сотрудника</a>
+            </nav>
+        </div>
+    </div>
+</header>
+<div class="container">
+
+    <table class="list">
+        <tr><th>ID сотрудника</th><th>Имя</th><th>Фамилия</th><th>ID департамента</th><th>Должность</th><th>Пол</th><th>Дата рождения</th><th></th></tr>
+        <tr th:each="el:${employees}">
+            <td th:text="${el.employeeId}"/>
+            <td th:text="${el.firstName}"/>
+            <td th:text="${el.lastName}"/>
+            <td th:text="${el.departamentId}"/>
+            <td th:text="${el.jobTitle}"/>
+            <td th:text="${el.gender}"/>
+            <td th:text="${el.dateOfBirth}"/>
+            <td>
+                <form th:action="'/' + ${el.employeeId}">
+                    <button class="btn">Подробнее</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+</div>
+</body>
+</html>
