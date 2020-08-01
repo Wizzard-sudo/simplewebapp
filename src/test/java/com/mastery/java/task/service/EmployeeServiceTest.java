@@ -18,6 +18,7 @@ import java.util.List;
 import static com.mastery.java.task.dto.Gender.FEMALE;
 import static com.mastery.java.task.dto.Gender.MALE;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -46,10 +47,10 @@ public class EmployeeServiceTest {
         Gender[] gender = new Gender[]{MALE, MALE, FEMALE};
         Date[] date = new Date[3];
         date[0] = new Date(1989, Calendar.MARCH, 2);
-        date[1] = new Date(1993, Calendar.JUNE,5);
-        date[2] = new Date(1995, Calendar.AUGUST,7);
+        date[1] = new Date(1993, Calendar.JUNE, 5);
+        date[2] = new Date(1995, Calendar.AUGUST, 7);
 
-        for (int i=0; i<3; i++) {
+        for (int i = 0; i < 3; i++) {
             Employee emp = new Employee();
             emp.setEmployeeId(employeeId[i]);
             emp.setFirstName(firstName[i]);
@@ -65,7 +66,7 @@ public class EmployeeServiceTest {
         List<Employee> empList = employeeService.getAll();
 
         assertEquals( 3, empList.size());
-        verify(employeeDao, times(1)).getAll();
+        then(employeeDao).should().getAll();
 
         System.out.println("getAllTest is successful");
     }
@@ -124,7 +125,7 @@ public class EmployeeServiceTest {
 
         employeeService.save(emp);
 
-        verify(employeeDao, times(1)).save(emp);
+        then(employeeDao).should().save(emp);
 
         System.out.println("saveTest is successful");
     }
@@ -135,7 +136,7 @@ public class EmployeeServiceTest {
 
         employeeService.deleteById(id);
 
-        verify(employeeDao, times(1)).deleteById(id);
+        then(employeeDao).should().deleteById(id);
 
         System.out.println("deleteByIdTest is successful");
     }
@@ -161,7 +162,7 @@ public class EmployeeServiceTest {
 
         employeeService.update(emp);
 
-        verify(employeeDao, times(1)).update(emp);
+        then(employeeDao).should().update(emp);
 
         System.out.println("updateTest is successful");
     }

@@ -31,7 +31,6 @@ public class EmployeeDaoImpl implements EmployeeDao {
             preparedStatement.setString(2, employee.getLastName());
             preparedStatement.setInt(3, employee.getDepartamentId());
             preparedStatement.setString(4, employee.getJobTitle());
-            //preparedStatement.setString(5, "MALE");
             preparedStatement.setString(5, String.valueOf(employee.getGender()));
             preparedStatement.setDate(6, (Date) employee.getDateOfBirth());
 

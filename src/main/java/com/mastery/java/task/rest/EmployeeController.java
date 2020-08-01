@@ -1,6 +1,5 @@
 package com.mastery.java.task.rest;
 
-import com.mastery.java.task.dao.EmployeeDao;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.dto.Gender;
 import com.mastery.java.task.service.EmployeeService;
@@ -18,11 +17,9 @@ public class EmployeeController {
 
 
     private final EmployeeService employeeService;
-    private final EmployeeDao employeeDao;
 
-    public EmployeeController(EmployeeService employeeService, EmployeeDao employeeDao) {
+    public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
-        this.employeeDao = employeeDao;
     }
 
     @GetMapping(value = "/")
@@ -33,7 +30,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/add")
-    public String employeeAdd(Model model){
+    public String employeeAdd(Model model) {
         return "employee-add";
     }
 
@@ -56,7 +53,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public String employeeDetails(@PathVariable(value = "id") int id, Model model){
+    public String employeeDetails(@PathVariable(value = "id") int id, Model model) {
 
         Employee employee = employeeService.getById(id);
         model.addAttribute("employee", employee);
@@ -64,14 +61,14 @@ public class EmployeeController {
     }
 
     @PostMapping("/{id}/delete")
-    public String employeeDelete(@PathVariable(value = "id") int id, Model model){
+    public String employeeDelete(@PathVariable(value = "id") int id, Model model) {
 
         employeeService.deleteById(id);
         return "redirect:/";
     }
 
     @GetMapping("/{id}/edit")
-    public String employeeEdit(@PathVariable(value = "id") int id, Model model){
+    public String employeeEdit(@PathVariable(value = "id") int id, Model model) {
 
         Employee employee = employeeService.getById(id);
         model.addAttribute("employee", employee);
@@ -85,7 +82,7 @@ public class EmployeeController {
                                  @RequestParam int departamentId,
                                  @RequestParam String jobTitle,
                                  @RequestParam String gender,
-                                 @RequestParam Date dateOfBirth, Model model){
+                                 @RequestParam Date dateOfBirth, Model model) {
         Employee employee = employeeService.getById(id);
         employee.setFirstName(firstName);
         employee.setLastName(lastName);

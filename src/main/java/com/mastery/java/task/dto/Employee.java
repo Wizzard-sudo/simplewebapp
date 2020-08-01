@@ -1,9 +1,12 @@
 package com.mastery.java.task.dto;
 
+import lombok.Builder;
+
 import javax.persistence.Entity;
 import java.util.Date;
 
 @Entity
+@Builder
 public class Employee {
 
     private int employeeId;
@@ -76,4 +79,5 @@ public class Employee {
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
 }
