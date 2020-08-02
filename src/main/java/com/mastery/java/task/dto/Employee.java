@@ -1,12 +1,14 @@
 package com.mastery.java.task.dto;
 
 import lombok.Builder;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import java.util.Date;
 
 @Entity
 @Builder
+@ToString
 public class Employee {
 
     private int employeeId;

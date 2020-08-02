@@ -1,6 +1,6 @@
 package com.mastery.java.task.service;
 
-import com.mastery.java.task.dao.EmployeeDao;
+import com.mastery.java.task.dao.EmployeeDaoImpl;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.dto.Gender;
 import org.junit.Before;
@@ -11,7 +11,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -19,16 +18,26 @@ import static com.mastery.java.task.dto.Gender.FEMALE;
 import static com.mastery.java.task.dto.Gender.MALE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class EmployeeServiceTest {
 
+    private List<Employee> employeeList;
+    private final int employeeId = 1;
+    private final String firstName = "Andy";
+    private final String lastName = "Samberg";
+    private final int departamentId = 1;
+    private final String jobTitle = "Java Developer";
+    private final Gender gender = MALE;
+    private final String datestr = "1989-03-02";
+    private final Date date = java.sql.Date.valueOf(datestr);
+
+    @Mock
+    EmployeeDaoImpl employeeDao;
     @InjectMocks
     EmployeeService employeeService;
 
-    @Mock
-    EmployeeDao employeeDao;
 
     @Before
     public void init(){
@@ -37,58 +46,20 @@ public class EmployeeServiceTest {
 
     @Test
     public void getAllTest(){
-        List<Employee> employeeList = new ArrayList<Employee>();
+        List<Employee> employeeList = stubEmployeeList();
 
-        int[] employeeId = new int[]{1, 2, 3};
-        String[] firstName = new String[]{"Andy", "Joe Lo", "Chelsea"};
-        String[] lastName = new String[]{"Samberg", "Truglio", "Peretti"};
-        int[] departamentId = new int[]{1, 2, 3};
-        String[] jobTitle = new String[]{"Java Developer", "HR", "Tester"};
-        Gender[] gender = new Gender[]{MALE, MALE, FEMALE};
-        Date[] date = new Date[3];
-        date[0] = new Date(1989, Calendar.MARCH, 2);
-        date[1] = new Date(1993, Calendar.JUNE, 5);
-        date[2] = new Date(1995, Calendar.AUGUST, 7);
-
-        for (int i = 0; i < 3; i++) {
-            Employee emp = new Employee();
-            emp.setEmployeeId(employeeId[i]);
-            emp.setFirstName(firstName[i]);
-            emp.setLastName(lastName[i]);
-            emp.setDepartamentId(departamentId[i]);
-            emp.setJobTitle(jobTitle[i]);
-            emp.setGender(gender[i]);
-            emp.setDateOfBirth(date[i]);
-            employeeList.add(emp);
-        }
         when(employeeDao.getAll()).thenReturn(employeeList);
 
         List<Employee> empList = employeeService.getAll();
 
         assertEquals( 3, empList.size());
         then(employeeDao).should().getAll();
-
         System.out.println("getAllTest is successful");
     }
 
     @Test
     public void getByIdTest(){
-        int employeeId = 1;
-        String firstName = "Andy";
-        String lastName = "Samberg";
-        int departamentId = 1;
-        String jobTitle = "Java Developer";
-        Gender gender = MALE;
-        Date date = new Date(1989, Calendar.MARCH, 2);
-
-        Employee emp = new Employee();
-        emp.setEmployeeId(employeeId);
-        emp.setFirstName(firstName);
-        emp.setLastName(lastName);
-        emp.setDepartamentId(departamentId);
-        emp.setJobTitle(jobTitle);
-        emp.setGender(gender);
-        emp.setDateOfBirth(date);
+        Employee emp = stubEmployee();
 
         when(employeeDao.getById(employeeId)).thenReturn(emp);
 
@@ -101,30 +72,16 @@ public class EmployeeServiceTest {
         assertEquals( gender, employee.getGender());
         assertEquals( date, employee.getDateOfBirth());
 
+        then(employeeDao).should().getById(employeeId);
         System.out.println("getByIdTest is successful");
     }
 
     @Test
     public void saveTest(){
-        int employeeId = 1;
-        String firstName = "Andy";
-        String lastName = "Samberg";
-        int departamentId = 1;
-        String jobTitle = "Java Developer";
-        Gender gender = MALE;
-        Date date = new Date(1989, Calendar.MARCH, 2);
 
-        Employee emp = new Employee();
-        emp.setEmployeeId(employeeId);
-        emp.setFirstName(firstName);
-        emp.setLastName(lastName);
-        emp.setDepartamentId(departamentId);
-        emp.setJobTitle(jobTitle);
-        emp.setGender(gender);
-        emp.setDateOfBirth(date);
+        Employee emp = stubEmployee();
 
         employeeService.save(emp);
-
         then(employeeDao).should().save(emp);
 
         System.out.println("saveTest is successful");
@@ -143,27 +100,51 @@ public class EmployeeServiceTest {
 
     @Test
     public void updateTest(){
-        int employeeId = 1;
-        String firstName = "Chelsea";
-        String lastName = "Peretti";
-        int departamentId = 3;
-        String jobTitle = "Tester";
-        Gender gender = FEMALE;
-        Date date = new Date(1995, Calendar.AUGUST,7);
 
-        Employee emp = new Employee();
-        emp.setEmployeeId(employeeId);
-        emp.setFirstName(firstName);
-        emp.setLastName(lastName);
-        emp.setDepartamentId(departamentId);
-        emp.setJobTitle(jobTitle);
-        emp.setGender(gender);
-        emp.setDateOfBirth(date);
-
+        Employee emp = stubEmployee();
         employeeService.update(emp);
 
         then(employeeDao).should().update(emp);
-
         System.out.println("updateTest is successful");
+    }
+
+    private List<Employee> stubEmployeeList() {
+        List<Employee> employeeList = new ArrayList<Employee>();
+
+        int[] employeeId = new int[]{1, 2, 3};
+        String[] firstName = new String[]{"Andy", "Joe Lo", "Chelsea"};
+        String[] lastName = new String[]{"Samberg", "Truglio", "Peretti"};
+        int[] departamentId = new int[]{1, 2, 3};
+        String[] jobTitle = new String[]{"Java Developer", "HR", "Tester"};
+        Gender[] gender = new Gender[]{MALE, MALE, FEMALE};
+        Date[] date = new Date[3];
+        String[] datestr = new String[]{"1989-03-02", "1993-06-05", "1995-08-07"};
+        for (int i = 0; i < 3; i++)
+            date[i] = java.sql.Date.valueOf(datestr[i]);
+
+        for (int i = 0; i < 3; i++) {
+            Employee emp = new Employee();
+            emp.setEmployeeId(employeeId[i]);
+            emp.setFirstName(firstName[i]);
+            emp.setLastName(lastName[i]);
+            emp.setDepartamentId(departamentId[i]);
+            emp.setJobTitle(jobTitle[i]);
+            emp.setGender(gender[i]);
+            emp.setDateOfBirth(date[i]);
+            employeeList.add(emp);
+        }
+        return employeeList;
+    }
+
+    private Employee stubEmployee(){
+        Employee employee = new Employee();
+        employee.setEmployeeId(employeeId);
+        employee.setFirstName(firstName);
+        employee.setLastName(lastName);
+        employee.setDepartamentId(departamentId);
+        employee.setJobTitle(jobTitle);
+        employee.setGender(gender);
+        employee.setDateOfBirth(date);
+        return employee;
     }
 }

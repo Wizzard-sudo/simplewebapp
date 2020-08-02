@@ -19,6 +19,7 @@ import java.util.List;
 import static com.mastery.java.task.dto.Gender.FEMALE;
 import static com.mastery.java.task.dto.Gender.MALE;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -38,14 +39,14 @@ public class EmployeeControllerTest {
     private MockMvc mockMvc;
 
     private List<Employee> employeeList;
-    int employeeId = 1;
-    String firstName = "Andy";
-    String lastName = "Samberg";
-    int departamentId = 1;
-    String jobTitle = "Java Developer";
-    Gender gender = MALE;
-    String datestr = "1989-03-02";
-    Date date = java.sql.Date.valueOf(datestr);
+    private final int employeeId = 1;
+    private final String firstName = "Andy";
+    private final String lastName = "Samberg";
+    private final int departamentId = 1;
+    private final String jobTitle = "Java Developer";
+    private final Gender gender = MALE;
+    private final String datestr = "1989-03-02";
+    private final Date date = java.sql.Date.valueOf(datestr);
 
     @Test
     public void addViewEmployeeTest() throws Exception {
@@ -57,15 +58,15 @@ public class EmployeeControllerTest {
     @Test
     public void addPostEmployeeTest() throws Exception{
 
-        Employee employee = stubEmployeeWithOutId();
+        Employee employee = stubEmployeeWithoutId();
 
         this.mockMvc.perform(post("/add")
-        .param("firstName", firstName)
-        .param("lastName", lastName)
-        .param("departamentId", String.valueOf(departamentId))
-        .param("jobTitle", jobTitle)
-        .param("gender", String.valueOf(gender))
-        .param("dateOfBirth", String.valueOf(date))).andDo(print())
+        .param("firstName", employee.getFirstName())
+        .param("lastName", employee.getLastName())
+        .param("departamentId", String.valueOf(employee.getDepartamentId()))
+        .param("jobTitle", employee.getJobTitle())
+        .param("gender", String.valueOf(employee.getGender()))
+        .param("dateOfBirth", String.valueOf(employee.getDateOfBirth()))).andDo(print())
               .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
 
         assertEquals( firstName, employee.getFirstName());
@@ -73,7 +74,8 @@ public class EmployeeControllerTest {
         assertEquals( departamentId, employee.getDepartamentId());
         assertEquals( gender, employee.getGender());
         assertEquals( date, employee.getDateOfBirth());
-        //then(service).should().save(employee);
+
+        then(service).should().save(any(Employee.class));
     }
 
 
@@ -133,7 +135,6 @@ public class EmployeeControllerTest {
         then(service).should().deleteById(id);
     }
 
-
     private List<Employee> stubEmployeeList() {
         List<Employee> employeeList = new ArrayList<Employee>();
 
@@ -174,7 +175,7 @@ public class EmployeeControllerTest {
         return employee;
     }
 
-    private Employee stubEmployeeWithOutId(){
+    private Employee stubEmployeeWithoutId(){
         Employee employee = new Employee();
         employee.setFirstName(firstName);
         employee.setLastName(lastName);
