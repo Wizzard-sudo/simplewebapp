@@ -54,7 +54,6 @@ public class EmployeeServiceTest {
 
         assertEquals( 3, empList.size());
         then(employeeDao).should().getAll();
-        System.out.println("getAllTest is successful");
     }
 
     @Test
@@ -73,7 +72,6 @@ public class EmployeeServiceTest {
         assertEquals( date, employee.getDateOfBirth());
 
         then(employeeDao).should().getById(employeeId);
-        System.out.println("getByIdTest is successful");
     }
 
     @Test
@@ -83,8 +81,6 @@ public class EmployeeServiceTest {
 
         employeeService.save(emp);
         then(employeeDao).should().save(emp);
-
-        System.out.println("saveTest is successful");
     }
 
     @Test
@@ -94,8 +90,6 @@ public class EmployeeServiceTest {
         employeeService.deleteById(id);
 
         then(employeeDao).should().deleteById(id);
-
-        System.out.println("deleteByIdTest is successful");
     }
 
     @Test
@@ -105,7 +99,6 @@ public class EmployeeServiceTest {
         employeeService.update(emp);
 
         then(employeeDao).should().update(emp);
-        System.out.println("updateTest is successful");
     }
 
     private List<Employee> stubEmployeeList() {
