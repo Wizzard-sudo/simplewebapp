@@ -17,12 +17,13 @@ import java.util.List;
 
 import static com.mastery.java.task.dto.Gender.MALE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestConfig.class)
 @JdbcTest
-@Sql({"/dbmigration/createTable.sql"})
-@Sql( scripts = {"/dbmigration/dropTable.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql("/dbmigration/createTable.sql")
+@Sql(scripts = "/dbmigration/dropTable.sql", executionPhase = AFTER_TEST_METHOD)
 class EmployeeDaoTest {
 
     @Autowired
@@ -31,22 +32,29 @@ class EmployeeDaoTest {
     @Autowired
     JdbcTemplate template;
 
+    private  String querySelectAll = "SELECT * FROM employee";
+    private  String querySelectByEmployeeId = "SELECT * FROM employee where first_name='";
+    private  String queryEnd = "'";
+
     private final int employeeId = 1;
     private final String firstName = "Andy";
+    private final String firstNameUp = "Greg";
     private final String lastName = "Samberg";
+    private final String lastNameUp = "Filch";
     private final int departamentId = 1;
+    private final int departamentIdUp = 3;
     private final String jobTitle = "Java Developer";
+    private final String jobTitleUp = "HR";
     private final Gender gender = MALE;
-    private final String datestr = "1989-03-02";
-    private final Date date = java.sql.Date.valueOf(datestr);
+    private final Date date = java.sql.Date.valueOf("1989-03-02");
 
-   @Test
-   @Rollback
+    @Test
+    @Rollback
     public void saveEmployeeTest() {
         Employee employee = stubEmployee();
         employeeDao.save(employee);
 
-        List<Employee> actualEmployeeList = template.query("SELECT * FROM employee where first_name='" + employee.getFirstName()+"'", new EmployeeMapper());
+        List<Employee> actualEmployeeList = template.query( querySelectByEmployeeId + employee.getFirstName()+queryEnd, new EmployeeMapper());
 
         employee.setEmployeeId(actualEmployeeList.get(0).getEmployeeId());
         assertThat(employee).isEqualToComparingFieldByFieldRecursively(actualEmployeeList.get(0));
@@ -58,7 +66,7 @@ class EmployeeDaoTest {
         Employee employee = stubEmployee();
         employeeDao.save(employee);
 
-        List<Employee> actualEmployeeList = template.query("SELECT * FROM employee where employee_id='" + employee.getEmployeeId()+"'", new EmployeeMapper());
+        List<Employee> actualEmployeeList = template.query("SELECT * FROM employee where employee_id='" + employee.getEmployeeId()+queryEnd, new EmployeeMapper());
 
         assertThat(employee).isEqualToComparingFieldByFieldRecursively(actualEmployeeList.get(0));
     }
@@ -70,7 +78,7 @@ class EmployeeDaoTest {
         employeeDao.save(employee);
         employee.setEmployeeId(2);
         employeeDao.save(employee);
-        List<Employee> actualEmployeeList = template.query("SELECT * FROM employee", new EmployeeMapper());
+        List<Employee> actualEmployeeList = template.query(querySelectAll, new EmployeeMapper());
 
         assertThat(2).isEqualToComparingFieldByFieldRecursively(actualEmployeeList.size());
     }
@@ -80,7 +88,7 @@ class EmployeeDaoTest {
     public void deleteEmployeeByIdTest(){
         Employee employee = stubEmployee();
         employeeDao.save(employee);
-        List<Employee> actualEmployeeList = template.query("SELECT * FROM employee", new EmployeeMapper());
+        List<Employee> actualEmployeeList = template.query(querySelectAll, new EmployeeMapper());
         assertThat(1).isEqualToComparingFieldByFieldRecursively(actualEmployeeList.size());
         employeeDao.deleteById(employee.getEmployeeId());
         actualEmployeeList = template.query("SELECT * FROM employee", new EmployeeMapper());
@@ -94,31 +102,30 @@ class EmployeeDaoTest {
         employeeDao.save(employee);
         employee = updateEmployee(employee);
         employeeDao.update(employee);
-        List<Employee> actualEmployeeList = template.query("SELECT * FROM employee where employee_id='" + employee.getEmployeeId()+"'", new EmployeeMapper());
+        List<Employee> actualEmployeeList = template.query("SELECT * FROM employee where first_name='" + employee.getFirstName()+queryEnd, new EmployeeMapper());
 
         assertThat(employee).isEqualToComparingFieldByFieldRecursively(actualEmployeeList.get(0));
     }
 
     private Employee stubEmployee() {
-        Employee employee = new Employee();
-        employee.setEmployeeId(employeeId);
-        employee.setFirstName(firstName);
-        employee.setLastName(lastName);
-        employee.setDepartamentId(departamentId);
-        employee.setJobTitle(jobTitle);
-        employee.setGender(gender);
-        employee.setDateOfBirth(date);
+        Employee employee = Employee.builder()
+                .employeeId(employeeId)
+                .firstName(firstName)
+                .lastName(lastName)
+                .departamentId(departamentId)
+                .jobTitle(jobTitle)
+                .gender(gender)
+                .dateOfBirth(date).build();
         return employee;
     }
 
     private Employee updateEmployee(Employee employee){
-        employee.setFirstName("Greg");
-        employee.setLastName("Filch");
-        employee.setDepartamentId(3);
-        employee.setJobTitle("HR");
-        employee.setGender(MALE);
+        employee.setFirstName(firstNameUp);
+        employee.setLastName(lastNameUp);
+        employee.setDepartamentId(departamentIdUp);
+        employee.setJobTitle(jobTitleUp);
+        employee.setGender(gender);
         employee.setDateOfBirth(date);
         return employee;
     }
-
 }

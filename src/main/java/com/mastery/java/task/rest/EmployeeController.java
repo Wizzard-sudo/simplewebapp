@@ -41,21 +41,13 @@ public class EmployeeController {
                               @RequestParam String jobTitle,
                               @RequestParam String gender,
                               @RequestParam Date dateOfBirth, Model model) {
-        /*Employee emp = Employee.builder()
+        Employee emp = Employee.builder()
                 .firstName(firstName)
                 .lastName(lastName)
                 .departamentId(departamentId)
                 .jobTitle(jobTitle)
                 .gender(Gender.valueOf(gender))
-                .dateOfBirth(dateOfBirth).build();*/
-        Employee emp = new Employee();
-        emp.setFirstName(firstName);
-        emp.setLastName(lastName);
-        emp.setDepartamentId(departamentId);
-        emp.setJobTitle(jobTitle);
-        emp.setGender(Gender.valueOf(gender));
-        emp.setDateOfBirth(dateOfBirth);
-        System.out.println(emp.getFirstName());
+                .dateOfBirth(dateOfBirth).build();
         employeeService.save(emp);
         return "redirect:/";
     }

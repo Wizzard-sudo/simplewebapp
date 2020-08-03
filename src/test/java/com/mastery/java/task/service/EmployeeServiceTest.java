@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+
 public class EmployeeServiceTest {
 
     private List<Employee> employeeList;

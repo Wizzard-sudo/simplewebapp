@@ -18,6 +18,7 @@ import java.util.List;
 
 import static com.mastery.java.task.dto.Gender.FEMALE;
 import static com.mastery.java.task.dto.Gender.MALE;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
@@ -45,8 +46,7 @@ public class EmployeeControllerTest {
     private final int departamentId = 1;
     private final String jobTitle = "Java Developer";
     private final Gender gender = MALE;
-    private final String datestr = "1989-03-02";
-    private final Date date = java.sql.Date.valueOf(datestr);
+    private final Date date = java.sql.Date.valueOf("1989-03-02");
 
     @Test
     public void addViewEmployeeTest() throws Exception {
@@ -150,39 +150,39 @@ public class EmployeeControllerTest {
         date[i] = java.sql.Date.valueOf(datestr[i]);
 
         for (int i = 0; i < 3; i++) {
-            Employee emp = new Employee();
-            emp.setEmployeeId(employeeId[i]);
-            emp.setFirstName(firstName[i]);
-            emp.setLastName(lastName[i]);
-            emp.setDepartamentId(departamentId[i]);
-            emp.setJobTitle(jobTitle[i]);
-            emp.setGender(gender[i]);
-            emp.setDateOfBirth(date[i]);
+            Employee emp = Employee.builder()
+                    .employeeId(employeeId[i])
+                    .firstName(firstName[i])
+                    .lastName(lastName[i])
+                    .departamentId(departamentId[i])
+                    .jobTitle(jobTitle[i])
+                    .gender(gender[i])
+                    .dateOfBirth(date[i]).build();
             employeeList.add(emp);
         }
         return employeeList;
     }
 
     private Employee stubEmployee(){
-        Employee employee = new Employee();
-        employee.setEmployeeId(employeeId);
-        employee.setFirstName(firstName);
-        employee.setLastName(lastName);
-        employee.setDepartamentId(departamentId);
-        employee.setJobTitle(jobTitle);
-        employee.setGender(gender);
-        employee.setDateOfBirth(date);
+        Employee employee = Employee.builder()
+                .employeeId(employeeId)
+                .firstName(firstName)
+                .lastName(lastName)
+                .departamentId(departamentId)
+                .jobTitle(jobTitle)
+                .gender(gender)
+                .dateOfBirth(date).build();
         return employee;
     }
 
     private Employee stubEmployeeWithoutId(){
-        Employee employee = new Employee();
-        employee.setFirstName(firstName);
-        employee.setLastName(lastName);
-        employee.setDepartamentId(departamentId);
-        employee.setJobTitle(jobTitle);
-        employee.setGender(gender);
-        employee.setDateOfBirth(date);
+        Employee employee = Employee.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .departamentId(departamentId)
+                .jobTitle(jobTitle)
+                .gender(gender)
+                .dateOfBirth(date).build();
         return employee;
     }
 
