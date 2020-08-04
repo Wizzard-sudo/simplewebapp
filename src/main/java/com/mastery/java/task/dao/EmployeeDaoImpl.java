@@ -41,13 +41,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
             preparedStatement.setDate(6, (Date) employee.getDateOfBirth());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error", e);
         } finally {
             try {
                 preparedStatement.close();
                 connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Error", e);
             }
         }
 
@@ -83,7 +83,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 preparedStatement.close();
                 con.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Error", e);
             }
         }
         return employee;
@@ -105,13 +105,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
             preparedStatement.setInt(7, employee.getEmployeeId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error", e);
         } finally {
             try {
                 preparedStatement.close();
                 con.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Error", e);
             }
         }
     }
@@ -126,13 +126,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error", e);
         } finally {
             try {
                 preparedStatement.close();
                 con.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Error", e);
             }
         }
     }
@@ -159,13 +159,13 @@ public class EmployeeDaoImpl implements EmployeeDao {
                 employeeList.add(employee);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error", e);
         } finally {
             try {
                 preparedStatement.close();
                 con.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                throw new RuntimeException("Error", e);
             }
         }
         return employeeList;
