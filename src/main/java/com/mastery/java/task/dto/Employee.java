@@ -2,7 +2,7 @@ package com.mastery.java.task.dto;
 
 import lombok.*;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -12,11 +12,15 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Employee {
-    private int employeeId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
+    private Integer employeeId;
     private String firstName;
     private String lastName;
-    private int departamentId;
+    private Integer departamentId;
     private String jobTitle;
-    private Gender gender;
+    private String gender;
     private Date dateOfBirth;
+
 }

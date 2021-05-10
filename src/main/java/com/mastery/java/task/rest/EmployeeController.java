@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 @Controller
 public class EmployeeController {
@@ -46,7 +47,7 @@ public class EmployeeController {
                 .lastName(lastName)
                 .departamentId(departamentId)
                 .jobTitle(jobTitle)
-                .gender(Gender.valueOf(gender))
+                .gender(gender)
                 .dateOfBirth(dateOfBirth).build();
         employeeService.save(emp);
         return "redirect:/";
@@ -71,6 +72,7 @@ public class EmployeeController {
     public String employeeEdit(@PathVariable(value = "id") int id, Model model) {
 
         Employee employee = employeeService.getById(id);
+        System.out.println(employee.toString());
         model.addAttribute("employee", employee);
         return "employee-edit";
     }
@@ -88,7 +90,7 @@ public class EmployeeController {
         employee.setLastName(lastName);
         employee.setDepartamentId(departamentId);
         employee.setJobTitle(jobTitle);
-        employee.setGender(Gender.valueOf(gender));
+        employee.setGender(gender);
         employee.setDateOfBirth(dateOfBirth);
         employeeService.update(employee);
         return "redirect:/";

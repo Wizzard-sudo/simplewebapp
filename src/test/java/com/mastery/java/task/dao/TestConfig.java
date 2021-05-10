@@ -33,9 +33,9 @@ public class TestConfig {
         return ds;
     }
 
-    @Bean
-    public EmployeeDaoImpl getEmployeeDao(@Autowired DataSource dataSource){
-        return new EmployeeDaoImpl(dataSource);
-    }
+//    @Bean
+//    public EmployeeDaoImpl getEmployeeDao(@Autowired DataSource dataSource){
+//        return new EmployeeDaoImpl(dataSource);
+//    }
 
 }

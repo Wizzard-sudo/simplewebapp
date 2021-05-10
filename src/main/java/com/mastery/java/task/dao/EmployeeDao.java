@@ -1,20 +1,14 @@
 package com.mastery.java.task.dao;
 
 import com.mastery.java.task.dto.Employee;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
+public interface EmployeeDao extends JpaRepository<Employee, Integer> {
 
-public interface EmployeeDao {
-
-    public void save(Employee employee);
-
-    public Employee getById(int id);
-
-    public void update(Employee employee);
-
-    public void deleteById(int id);
-
-    public List<Employee> getAll();
+    public Employee getEmployeeByEmployeeId(int employeeId);
 
 }

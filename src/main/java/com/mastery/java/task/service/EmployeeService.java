@@ -20,21 +20,23 @@ public class EmployeeService {
 
 
     public Employee getById(int id) {
-        return employeeDao.getById(id);
+        return employeeDao.getEmployeeByEmployeeId(id);
     }
 
 
     public void update(Employee employee) {
-        employeeDao.update(employee);
+        employeeDao.save(employee);
     }
 
 
     public void deleteById(int id) {
+
+        System.out.println("deleted" + id);
         employeeDao.deleteById(id);
     }
 
 
     public List<Employee> getAll() {
-        return employeeDao.getAll();
+        return employeeDao.findAll();
     }
 }
