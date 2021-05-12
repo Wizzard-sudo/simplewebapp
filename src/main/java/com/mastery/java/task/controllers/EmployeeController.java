@@ -51,7 +51,7 @@ public class EmployeeController {
         return "redirect:/";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public String employeeDetails(@PathVariable(value = "id") int id, Model model) {
 
         Employee employee = employeeService.getById(id);
