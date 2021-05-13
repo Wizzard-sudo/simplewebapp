@@ -25,7 +25,7 @@
     <p><b>Номер департамента: </b><span th:text="${el.departamentId}"/></p>
     <p><b>Должность: </b><span th:text="${el.jobTitle}"/></p>
     <p><b>Пол: </b> <span th:text="${el.gender}"/></p>
-    <p><b>Дата рождения: </b><span th:text="${el.dateOfBirth}"/></p>
+    <p><b>Дата рождения: </b><span th:text="${el.dateOfBirthString}"/></p>
     </form>
 
     <form th:action="'/' + ${el.employeeId} + '/delete'" method="post">

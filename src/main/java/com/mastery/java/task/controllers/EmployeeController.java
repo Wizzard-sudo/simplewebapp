@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Controller
@@ -70,7 +71,6 @@ public class EmployeeController {
     public String employeeEdit(@PathVariable(value = "id") int id, Model model) {
 
         Employee employee = employeeService.getById(id);
-        System.out.println(employee.toString());
         model.addAttribute("employee", employee);
         return "employee-edit";
     }

@@ -20,7 +20,9 @@ public class EmployeeService {
 
 
     public Employee getById(int id) {
-        return employeeDao.getEmployeeByEmployeeId(id);
+        Employee employee = employeeDao.getEmployeeByEmployeeId(id);
+        employee.getDateString();
+        return employee;
     }
 
 
@@ -30,13 +32,15 @@ public class EmployeeService {
 
 
     public void deleteById(int id) {
-
-        System.out.println("deleted" + id);
         employeeDao.deleteById(id);
     }
 
 
     public List<Employee> getAll() {
-        return employeeDao.findAll();
+        List<Employee> employees = employeeDao.findAll();
+        for (Employee employee: employees)
+            employee.getDateString();
+
+        return employees;
     }
 }

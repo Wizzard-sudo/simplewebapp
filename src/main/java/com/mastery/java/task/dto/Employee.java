@@ -1,9 +1,11 @@
 package com.mastery.java.task.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -25,4 +27,12 @@ public class Employee {
     private String gender;
     private Date dateOfBirth;
 
+    @JsonIgnore
+    @Transient
+    private String dateOfBirthString;
+
+    public void getDateString(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        this.setDateOfBirthString(format.format(this.getDateOfBirth()));
+    }
 }
