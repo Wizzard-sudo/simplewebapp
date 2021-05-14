@@ -22,17 +22,17 @@
     <form method="post">
 
         <b class="b1">Имя: </b><br>
-        <input class= "input_text" type="text" th:value="${employee.firstName}" name="firstName" placeholder="Введите имя"><br>
+        <input th:classappend="${#fields.hasErrors('firstName') ? 'input_text_error' : 'input_text'}" type="text" th:value="${employee.firstName}" name="firstName" placeholder="Введите имя"><br>
         <b class="b1">Фамилия: </b><br>
-        <input class= "input_text" type="text" th:value="${employee.lastName}" name="lastName" placeholder="Введите фамилию"><br>
+        <input th:classappend="${#fields.hasErrors('lastName') ? 'input_text_error' : 'input_text'}" type="text" th:value="${employee.lastName}" name="lastName" placeholder="Введите фамилию"><br>
         <b class="b1">Номер департамента: </b><br>
-        <input class= "input_number" type="number" th:value="${employee.departamentId}" name="departamentId" placeholder="Введите номер департамента"><br>
+        <input th:classappend="${#fields.hasErrors('departamentId') ? 'input_number_error' : 'input_number'}" type="number" th:value="${employee.departamentId}" name="departamentId" placeholder="Введите номер департамента"><br>
         <b class="b1">Должность: </b><br>
-        <input class= "input_text" type="text" th:value="${employee.jobTitle}" name="jobTitle" placeholder="Введите должность"><br>
+        <input th:classappend="${#fields.hasErrors('jobTitle') ? 'input_text_error' : 'input_text'}" type="text" th:value="${employee.jobTitle}" name="jobTitle" placeholder="Введите должность"><br>
         <b class="b1">Пол: </b><br>
         <input class="input_gender" type="radio" th:value="${employee.gender}" name="genderDB">
-        <label class="gender"><input class="input_gender" type="radio" name="gender" value="MALE"><div class="stlradio"></div>Male</label>
-        <label class="gender"><input class="input_gender" type="radio" name="gender" value="FEMALE"><div class="stlradio"></div>Female</label><br>
+        <label th:classappend="${#fields.hasErrors('gender') ? 'gender_error' : 'gender'}"><input class="input_gender" type="radio" name="gender" value="MALE"><div class="stlradio"></div>Male</label>
+        <label th:classappend="${#fields.hasErrors('gender') ? 'gender_error' : 'gender'}"><input class="input_gender" type="radio" name="gender" value="FEMALE"><div class="stlradio"></div>Female</label><br>
         <script th:inline="javascript">
         /*<![CDATA[*/
             function check(){
@@ -48,7 +48,7 @@
 
         </script>
         <b class="b1">Дата рождения: </b><br>
-        <input class="calendar" type="date" th:value="${employee.dateOfBirthString}" name="dateOfBirth" placeholder="Введите дату рождения"><br>
+        <input th:classappend="${#fields.hasErrors('dateOfBirth') ? 'calendar_error' : 'calendar'}" type="date" th:value="${employee.dateOfBirthString}" name="dateOfBirth" placeholder="Введите дату рождения"><br>
         <button class="btn" type="submit" >Обновить</button>
     </form>
 </div>

@@ -158,14 +158,16 @@ button.btn:hover {
 }
 
 
-
-
-.gender {
+.gender, .gender_error {
     font-size: 15px;
     cursor: pointer;
     color: #fff;
-
 }
+
+.gender_error {
+	color: red;
+}
+
 .input_gender{
 display: none;
 }
@@ -198,7 +200,7 @@ display: none;
 input:checked + .stlradio:before {
     opacity: 1;
 }
-.input_text {
+.input_text, .input_text_error {
 	width: 300px;
 	font-size: 13px;
 	padding: 6px 0 4px 10px;
@@ -208,11 +210,15 @@ input:checked + .stlradio:before {
 	margin-top: 3px;
 }
 
+.input_text_error {
+	border: 2px solid red;
+}
+
 input{
 margin-bottom: 5px;
 }
 
-.input_number {
+.input_number, .input_number_error {
 	width: 300px;
 	font-size: 13px;
 	padding: 6px 0 4px 10px;
@@ -223,12 +229,16 @@ margin-bottom: 5px;
 	 margin-top: 3px;
 }
 
+.input_number_error {
+	border: 2px solid red;
+}
+
 .raz::-webkit-inner-spin-button {
   display: none;
 }
 
 
-.calendar{
+.calendar, .calendar_error{
     width: 300px;
 	font-size: 13px;
 	padding: 6px 0 4px 10px;
@@ -237,6 +247,10 @@ margin-bottom: 5px;
 	border-radius: 8px;
 	text-decoration: none;
 	margin-top: 3px;
+}
+
+.calendar_error {
+	border: 2px solid red;
 }
 
 .b1{

@@ -5,10 +5,12 @@ import com.mastery.java.task.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -35,7 +37,11 @@ public class EmployeeController {
     }
 
     @PostMapping("/add")
-    public String employeeAdd(Employee employee) {
+    public String employeeAdd(@Valid Employee employee, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("employee", employee);
+            return "employee-add";
+        }
         employeeService.save(employee);
         return "redirect:/";
     }
@@ -63,8 +69,14 @@ public class EmployeeController {
 
     @PostMapping("/{id}/edit")
     public String employeeUpdate(@PathVariable(value = "id") int id,
-                                 Employee employee) {
+                                 @Valid Employee employee, BindingResult bindingResult, Model model) {
         employee.setEmployeeId(id);
+        employee.getDateString();
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("employee", employee);
+            System.out.println(employee);
+            return "employee-edit";
+        }
         employeeService.update(employee);
         return "redirect:/";
     }
