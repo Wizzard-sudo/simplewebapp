@@ -24,7 +24,7 @@ public class SpringFoxConfig {
                 .apiInfo(apiInfo());
     }
 
-    public ApiInfo apiInfo(){
+    public ApiInfo apiInfo() {
         return new ApiInfo(
                 "Employee Task API",
                 "API for Employee Task",

@@ -2,7 +2,9 @@ package com.mastery.java.task.service;
 
 import com.mastery.java.task.dao.EmployeeDao;
 import com.mastery.java.task.dto.Employee;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -37,8 +39,8 @@ public class EmployeeService {
 
 
     public List<Employee> getAll() {
-        List<Employee> employees = employeeDao.findAll();
-        for (Employee employee: employees)
+        List<Employee> employees = employeeDao.findAll(Sort.by(Sort.Direction.ASC, "employeeId"));
+        for (Employee employee : employees)
             employee.getDateString();
 
         return employees;

@@ -3,6 +3,7 @@ package com.mastery.java.task.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
@@ -25,13 +26,14 @@ public class Employee {
     private Integer departamentId;
     private String jobTitle;
     private String gender;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
 
     @JsonIgnore
     @Transient
     private String dateOfBirthString;
 
-    public void getDateString(){
+    public void getDateString() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         this.setDateOfBirthString(format.format(this.getDateOfBirth()));
     }

@@ -6,9 +6,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -25,61 +27,36 @@ public class EmployeeRestController {
 
     @GetMapping("/getAll")
     @ApiOperation("method to get all employees")
-    public ResponseEntity<List<Employee>> getAllEmployee(){
+    public ResponseEntity<List<Employee>> getAllEmployee() {
         List<Employee> employees = employeeService.getAll();
         return ResponseEntity.ok(employees);
     }
 
     @GetMapping("/getById")
     @ApiOperation("method to get employee bu id")
-    public ResponseEntity<Employee> getEmployeeById(@RequestParam("id") Integer id){
+    public ResponseEntity<Employee> getEmployeeById(@RequestParam("id") Integer id) {
         Employee employee = employeeService.getById(id);
         return ResponseEntity.ok(employee);
     }
 
     @GetMapping("/add")
     @ApiOperation("method to add employee")
-    public ResponseEntity<Employee> addEmployee(@RequestParam("firstName") String firstName,
-                                                             @RequestParam("lastName") String lastName,
-                                                             @RequestParam("departamentId") int departamentId,
-                                                             @RequestParam("jobTitle") String jobTitle,
-                                                             @RequestParam("gender") String gender,
-                                                             @RequestParam("dateOfBirth") Date dateOfBirth){
-        Employee employee = Employee.builder()
-                .firstName(firstName)
-                .lastName(lastName)
-                .departamentId(departamentId)
-                .jobTitle(jobTitle)
-                .gender(gender)
-                .dateOfBirth(dateOfBirth).build();
+    public ResponseEntity<Employee> addEmployee(Employee employee) {
         employeeService.save(employee);
         return ResponseEntity.ok(employee);
     }
 
     @GetMapping("/update")
     @ApiOperation("method to update employee")
-    public ResponseEntity<Employee> updateEmployee(@RequestParam("id") Integer id,
-                                                                @RequestParam("firstName") String firstName,
-                                                                @RequestParam("lastName") String lastName,
-                                                                @RequestParam("departamentId") int departamentId,
-                                                                @RequestParam("jobTitle") String jobTitle,
-                                                                @RequestParam("gender") String gender,
-                                                                @RequestParam("dateOfBirth") Date dateOfBirth){
-        Employee employee = Employee.builder()
-                .employeeId(id)
-                .firstName(firstName)
-                .lastName(lastName)
-                .departamentId(departamentId)
-                .jobTitle(jobTitle)
-                .gender(gender)
-                .dateOfBirth(dateOfBirth).build();
+    public ResponseEntity<Employee> updateEmployee(@RequestParam("id") Integer id, Employee employee) {
+        employee.setEmployeeId(id);
         employeeService.save(employee);
         return ResponseEntity.ok(employee);
     }
 
     @GetMapping("/delete")
     @ApiOperation("method to delete employee by id")
-    public ResponseEntity<Employee> deleteEmployee(@RequestParam("id") Integer id){
+    public ResponseEntity<Employee> deleteEmployee(@RequestParam("id") Integer id) {
         Employee employee = employeeService.getById(id);
         employeeService.deleteById(id);
         return ResponseEntity.ok(employee);
