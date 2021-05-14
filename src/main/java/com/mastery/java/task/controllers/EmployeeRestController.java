@@ -47,6 +47,7 @@ public class EmployeeRestController {
     @GetMapping("/add")
     @ApiOperation("method to add employee")
     public ResponseEntity<?> addEmployee(@Valid Employee employee, BindingResult bindingResult) {
+        System.out.println(employee);
         if(bindingResult.hasErrors())
             return ResponseEntity.ok(collectResponseToInvalidRequest(employee, bindingResult));
         employeeService.save(employee);
@@ -76,15 +77,7 @@ public class EmployeeRestController {
         for (Object object : bindingResult.getAllErrors()){
             if(object instanceof FieldError){
                 FieldError fieldError = (FieldError) object;
-                if(fieldError.getField().equals("dateOfBirth")) {
-                    str += " поле - " + fieldError.getField() + "; Неверный формат даты, вводите дату в формате \"yyyy-MM-dd\";\n";
-                }else {
-                    if(fieldError.getCode().equals("typeMismatch") || fieldError.getField().equals("departamentId")) {
-                        str += " поле - " + fieldError.getField() + "; В поле должны быть числа;\n";
-                    }else {
-                        str += " поле - " + fieldError.getField() + "; Ошибка - " + fieldError.getDefaultMessage() + ";\n";
-                    }
-                }
+                str += " Поле - " + fieldError.getField() + "; Ошибка - " + fieldError.getDefaultMessage() + ";\n";
             }
         }
         str += "Пожалуйста, откорректируйте запрос и повторите";

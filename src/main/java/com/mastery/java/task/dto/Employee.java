@@ -1,6 +1,7 @@
 package com.mastery.java.task.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mastery.java.task.dto.validator.IsGender;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiParam;
 import lombok.*;
@@ -12,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Builder
@@ -32,17 +33,18 @@ public class Employee {
     @NotBlank(message = "не долюно быть пустым")
     @Size(min = 3, message = "должно состоять хотя бы из 3 символов")
     private String lastName;
-    @NotNull(message = "не долюно быть пустым")
+    @NotNull(message = "не должно быть пустым")
     @Digits(integer = 2, fraction = 0)
-    private Integer departamentId;
-    @NotBlank(message = "не долюно быть пустым")
+    private String departamentId;
+    @NotBlank(message = "не должно быть пустым")
     private String jobTitle;
-    @NotNull(message = "не долюно быть пустым")
+    @NotNull(message = "не должно быть пустым")
+    @IsGender
     private String gender;
-    @NotNull(message = "не долюно быть пустым")
+    @NotNull(message = "не должно быть пустым")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiParam("формат: yyyy-MM-dd")
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @JsonIgnore
     @Transient
