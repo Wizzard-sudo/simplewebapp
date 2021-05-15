@@ -71,7 +71,6 @@ public class EmployeeController {
     public String employeeUpdate(@PathVariable(value = "id") int id,
                                  @Valid Employee employee, BindingResult bindingResult, Model model) {
         employee.setEmployeeId(id);
-        employee.getDateString();
         if(bindingResult.hasErrors()) {
             model.addAttribute("employee", employee);
             System.out.println(employee);

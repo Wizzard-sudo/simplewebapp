@@ -45,13 +45,4 @@ public class Employee {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiParam("формат: yyyy-MM-dd")
     private LocalDate dateOfBirth;
-
-    @JsonIgnore
-    @Transient
-    private String dateOfBirthString;
-
-    public void getDateString() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        this.setDateOfBirthString(format.format(this.getDateOfBirth()));
-    }
 }

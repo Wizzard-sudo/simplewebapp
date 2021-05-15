@@ -22,9 +22,7 @@ public class EmployeeService {
 
 
     public Employee getById(int id) {
-        Employee employee = employeeDao.getEmployeeByEmployeeId(id);
-        employee.getDateString();
-        return employee;
+        return employeeDao.getEmployeeByEmployeeId(id);
     }
 
 
@@ -39,10 +37,6 @@ public class EmployeeService {
 
 
     public List<Employee> getAll() {
-        List<Employee> employees = employeeDao.findAll(Sort.by(Sort.Direction.ASC, "employeeId"));
-        for (Employee employee : employees)
-            employee.getDateString();
-
-        return employees;
+        return employeeDao.findAll(Sort.by(Sort.Direction.ASC, "employeeId"));
     }
 }
