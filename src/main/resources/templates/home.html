@@ -17,8 +17,61 @@
         </div>
     </div>
 </header>
+<div class="inner">
+<div>
+    <table class="list_log">
+        <tr>
+            <td>Уровень логгирования</td>
+        </tr>
+        <tr>
+            <td align="center" class="log_lvl" th:text="${loglevel}"/>
+        </tr>
+        <tr>
+            <td>Переключить уровень</td>
+        </tr>
+        <tr>
+            <td align="center">
+                <form th:action="@{/lvl/TRACE}" method="post">
+                    <button th:classappend="${loglevel=='TRACE' ? 'btn_deactive' : 'btn'}"
+                            th:disabled="${loglevel=='TRACE'}">TRACE</button>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <form th:action="@{/lvl/DEBUG}" method="post">
+                    <button th:classappend="${loglevel=='DEBUG' ? 'btn_deactive' : 'btn'}"
+                            th:disabled="${loglevel=='DEBUG'}">DEBUG</button>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <form th:action="@{/lvl/INFO}" method="post">
+                    <button th:classappend="${loglevel=='INFO' ? 'btn_deactive' : 'btn'}"
+                            th:disabled="${loglevel=='INFO'}">INFO</button>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <form th:action="@{/lvl/WARN}" method="post">
+                    <button th:classappend="${loglevel=='WARN' ? 'btn_deactive' : 'btn'}"
+                            th:disabled="${loglevel=='WARN'}">WARN</button>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">
+                <form th:action="@{/lvl/ERROR}" method="post">
+                    <button th:classappend="${loglevel=='ERROR' ? 'btn_deactive' : 'btn'}"
+                            th:disabled="${loglevel=='ERROR'}">ERROR</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
 <div class="container">
-
     <table class="list">
         <tr><th>ID сотрудника</th><th>Имя</th><th>Фамилия</th><th>ID департамента</th><th>Должность</th><th>Пол</th><th>Дата рождения</th><th></th></tr>
         <tr th:each="el:${employees}">
@@ -36,7 +89,7 @@
             </td>
         </tr>
     </table>
-
+</div>
 </div>
 </body>
 </html>

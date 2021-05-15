@@ -87,25 +87,34 @@ body {
 }
 
 .list{
-margin-top:100px;
-color: #fff;
+	color: #fff;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 14px;
+	max-width: 80%;
+	width: 80%;
+	border-collapse: collapse;
+	text-align: left;
 }
 
-table {
-  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-  font-size: 14px;
-  max-width: 80%;
-  width: 80%;
-  border-collapse: collapse;
-  text-align: left;
+.list_log{
+	margin-left: 100px;
+	margin-top: 30px;
+	color: #fff;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 14px;
 }
+
+.list_log td{
+	padding: 5px 5px;
+}
+
 th {
   font-weight: normal;
   color: #fff;
   border-bottom: 2px solid #fff;
   padding: 10px 8px;
 }
-td {
+.list td {
   color: #fff;
   padding: 9px 8px;
   transition: .1s linear;
@@ -133,6 +142,26 @@ button.btn {
   text-decoration:none;
   transition: .1s linear;
 }
+
+button.btn_deactive {
+	padding: 3px 14px;
+
+	background:  #808080;
+	border-color: rgba(255, 255, 255, 0.027451) #fce38a rgba(255, 255, 255, 0.027451) rgba(255, 255, 255, 0.027451);
+	border-style: solid;
+	border-width: 1px 4px 1px 1px;
+	box-shadow: rgba(0, 0, 0, 0.701961) 0px 5px 12px;
+	color: #fff;
+	display:block;
+	width:120px;
+	border-radius: 5px;
+	font-size: 15px;
+	text-shadow: rgb(0, 0, 0) 0px 1px 1px;
+	line-height: 30px;
+	position: relative;
+	text-align: center;
+}
+
 button.btn:hover {
   cursor: pointer;
   opacity: 0.9;
@@ -258,4 +287,9 @@ margin-bottom: 5px;
     line-height: 1.6;
     color: #fff;
     margin-left: -5px;
+}
+
+.inner {
+	display: flex;
+	margin-top: 80px;
 }
