@@ -4,6 +4,9 @@ import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.service.EmployeeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,8 @@ import java.util.List;
 @Api("Employee rest")
 public class EmployeeRestController {
 
+    private static final Logger log = Logger.getLogger(EmployeeController.class);
+    private static final Log logCon = LogFactory.getLog(EmployeeController.class);
     private final EmployeeService employeeService;
 
     @Autowired
@@ -34,6 +39,8 @@ public class EmployeeRestController {
     @ApiOperation("method to get all employees")
     public ResponseEntity<List<Employee>> getAllEmployee() {
         List<Employee> employees = employeeService.getAll();
+        log.trace("Getting all employees from the database");
+        logCon.trace("Getting all employees from the database");
         return ResponseEntity.ok(employees);
     }
 
@@ -41,6 +48,8 @@ public class EmployeeRestController {
     @ApiOperation("method to get employee bu id")
     public ResponseEntity<Employee> getEmployeeById(@RequestParam("id") Integer id) {
         Employee employee = employeeService.getById(id);
+        log.info("Employee with ID " + id + " received: " + employee);
+        logCon.info("Employee with ID " + id + " received: " + employee);
         return ResponseEntity.ok(employee);
     }
 
@@ -48,8 +57,12 @@ public class EmployeeRestController {
     @ApiOperation("method to add employee")
     public ResponseEntity<?> addEmployee(@Valid Employee employee, BindingResult bindingResult) {
         System.out.println(employee);
-        if(bindingResult.hasErrors())
+        if(bindingResult.hasErrors()) {
+            log.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
+            log.trace("Invalid employee: " + bindingResult.getAllErrors());
+            logCon.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
             return ResponseEntity.ok(collectResponseToInvalidRequest(employee, bindingResult));
+        }
         employeeService.save(employee);
         return ResponseEntity.ok(employee);
     }
@@ -57,10 +70,16 @@ public class EmployeeRestController {
     @GetMapping("/update")
     @ApiOperation("method to update employee")
     public ResponseEntity<?> updateEmployee(@RequestParam("id") Integer id, @Valid Employee employee, BindingResult bindingResult) {
-        if(bindingResult.hasErrors())
+        if(bindingResult.hasErrors()) {
+            log.warn("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
+            log.debug("Invalid employee: " + bindingResult.getAllErrors());
+            logCon.warn("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
             return ResponseEntity.ok(collectResponseToInvalidRequest(employee, bindingResult));
+        }
         employee.setEmployeeId(id);
         employeeService.save(employee);
+        log.info("Employee with ID " + id + " changed: " + employee);
+        logCon.info("Employee with ID " + id + " changed: " + employee);
         return ResponseEntity.ok(employee);
     }
 
@@ -69,6 +88,8 @@ public class EmployeeRestController {
     public ResponseEntity<Employee> deleteEmployee(@RequestParam("id") Integer id) {
         Employee employee = employeeService.getById(id);
         employeeService.deleteById(id);
+        log.info("Employee with ID " + id + " deleted");
+        logCon.info("Employee with ID " + id + " deleted");
         return ResponseEntity.ok(employee);
     }
 

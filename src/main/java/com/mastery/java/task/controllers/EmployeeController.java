@@ -3,8 +3,11 @@ package com.mastery.java.task.controllers;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.service.EmployeeService;
 import okhttp3.*;
+
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +26,8 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
-    private final Log log = LogFactory.getLog(EmployeeController.class);
+    private static final Logger log = Logger.getLogger(EmployeeController.class);
+    private static final Log logCon = LogFactory.getLog(EmployeeController.class);
     private String logLevel = "INFO";
 
     @ModelAttribute("loglevel")
@@ -38,18 +42,17 @@ public class EmployeeController {
 
     @GetMapping(value = "/")
     public String home(Model model) {
+        logCon.trace("Getting all employees from the database");
         List<Employee> employees = employeeService.getAll();
         model.addAttribute("employees", employees);
-        log.trace("This is a TRACE level message");
-        log.debug("This is a DEBUG level message");
-        log.info("This is an INFO level message");
-        log.warn("This is a WARN level message");
-        log.error("This is an ERROR level message");
+        log.info("Go to the main page");
+        logCon.info("Go to the main page");
         return "home";
     }
 
     @GetMapping("/add")
     public String employeeAdd(Model model) {
+        logCon.trace("Go to the page for adding an employee");
         model.addAttribute("employee", new Employee());
         return "employee-add";
     }
@@ -57,9 +60,14 @@ public class EmployeeController {
     @PostMapping("/add")
     public String employeeAdd(@Valid Employee employee, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()) {
+            log.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
+            log.trace("Invalid employee: " + bindingResult.getAllErrors());
+            logCon.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
             model.addAttribute("employee", employee);
             return "employee-add";
         }
+        log.info("Employee added: " + employee);
+        logCon.info("Employee added: " + employee);
         employeeService.save(employee);
         return "redirect:/";
     }
@@ -67,6 +75,8 @@ public class EmployeeController {
     @GetMapping("/get/{id}")
     public String employeeDetails(@PathVariable(value = "id") int id, Model model) {
         Employee employee = employeeService.getById(id);
+        log.info("Employee with ID " + id + " received: " + employee);
+        logCon.info("Employee with ID " + id + " received: " + employee);
         model.addAttribute("employee", employee);
         return "employee-details";
     }
@@ -74,13 +84,15 @@ public class EmployeeController {
     @PostMapping("/{id}/delete")
     public String employeeDelete(@PathVariable(value = "id") int id) {
         employeeService.deleteById(id);
+        log.info("Employee with ID " + id + " deleted");
+        logCon.info("Employee with ID " + id + " deleted");
         return "redirect:/";
     }
 
     @GetMapping("/{id}/edit")
     public String employeeEdit(@PathVariable(value = "id") int id, Model model) {
-
         Employee employee = employeeService.getById(id);
+        logCon.trace("Go to the page for change an employee with id " + id);
         model.addAttribute("employee", employee);
         return "employee-edit";
     }
@@ -91,16 +103,19 @@ public class EmployeeController {
         employee.setEmployeeId(id);
         if(bindingResult.hasErrors()) {
             model.addAttribute("employee", employee);
-            System.out.println(employee);
+            log.warn("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
+            log.debug("Invalid employee: " + bindingResult.getAllErrors());
+            logCon.warn("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
             return "employee-edit";
         }
         employeeService.update(employee);
+        log.info("Employee with ID " + id + " changed: " + employee);
+        logCon.info("Employee with ID " + id + " changed: " + employee);
         return "redirect:/";
     }
 
     @PostMapping("/lvl/{level}")
     public String changeLogLevel(@PathVariable(value = "level") String level) throws IOException {
-
         OkHttpClient client = new OkHttpClient().newBuilder().build();
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, "{\"configuredLevel\": \"" + level + "\"}");
@@ -110,9 +125,20 @@ public class EmployeeController {
                 .addHeader("Content-Type", "application/json")
                 .build();
         Response response = client.newCall(request).execute();
-
+        log.setLevel(getLevelLog4j(level));
         logLevel = level;
-        System.out.println(level);
+        log.error("Logging level changed: " + level);
+        logCon.error("Logging level changed: " + level);
         return "redirect:/";
+    }
+
+    public Level getLevelLog4j(String logLevel){
+        switch (logLevel){
+            case "TRACE": return Level.TRACE;
+            case "DEBUG": return Level.DEBUG;
+            case "WARN": return Level.WARN;
+            case "ERROR": return Level.ERROR;
+            default: return Level.INFO;
+        }
     }
 }
