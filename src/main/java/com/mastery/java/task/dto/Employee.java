@@ -35,7 +35,7 @@ public class Employee {
     private String lastName;
     @NotNull(message = "не должно быть пустым")
     @Digits(integer = 2, fraction = 0)
-    private String departamentId;
+    private Integer departamentId;
     @NotBlank(message = "не должно быть пустым")
     private String jobTitle;
     @NotNull(message = "не должно быть пустым")

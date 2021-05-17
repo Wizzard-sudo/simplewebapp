@@ -7,12 +7,10 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.log4j.Logger;
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,7 +55,7 @@ public class EmployeeRestController {
     @ApiOperation("method to add employee")
     public ResponseEntity<?> addEmployee(@Valid Employee employee, BindingResult bindingResult) {
         System.out.println(employee);
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
             log.trace("Invalid employee: " + bindingResult.getAllErrors());
             logCon.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
@@ -70,7 +68,7 @@ public class EmployeeRestController {
     @GetMapping("/update")
     @ApiOperation("method to update employee")
     public ResponseEntity<?> updateEmployee(@RequestParam("id") Integer id, @Valid Employee employee, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.warn("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
             log.debug("Invalid employee: " + bindingResult.getAllErrors());
             logCon.warn("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
@@ -93,10 +91,10 @@ public class EmployeeRestController {
         return ResponseEntity.ok(employee);
     }
 
-    public String collectResponseToInvalidRequest(Employee employee, BindingResult bindingResult){
+    public String collectResponseToInvalidRequest(Employee employee, BindingResult bindingResult) {
         String str = new String("Запрос имеет некорректные данные в след. полях :\n");
-        for (Object object : bindingResult.getAllErrors()){
-            if(object instanceof FieldError){
+        for (Object object : bindingResult.getAllErrors()) {
+            if (object instanceof FieldError) {
                 FieldError fieldError = (FieldError) object;
                 str += " Поле - " + fieldError.getField() + "; Ошибка - " + fieldError.getDefaultMessage() + ";\n";
             }
