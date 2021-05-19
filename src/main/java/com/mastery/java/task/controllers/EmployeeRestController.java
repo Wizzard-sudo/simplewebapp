@@ -1,6 +1,8 @@
 package com.mastery.java.task.controllers;
 
 import com.mastery.java.task.dto.Employee;
+import com.mastery.java.task.exceptions.DuplicateEmployeeException;
+import com.mastery.java.task.exceptions.InvalidDateException;
 import com.mastery.java.task.service.EmployeeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,8 +26,8 @@ import java.util.List;
 @Api("Employee rest")
 public class EmployeeRestController {
 
-    private static final Logger log = Logger.getLogger(EmployeeController.class);
-    private static final Log logCon = LogFactory.getLog(EmployeeController.class);
+    private static final Logger log = Logger.getLogger(EmployeeRestController.class);
+    private static final Log logCon = LogFactory.getLog(EmployeeRestController.class);
     private final EmployeeService employeeService;
 
     @Autowired
@@ -53,16 +55,17 @@ public class EmployeeRestController {
 
     @GetMapping("/add")
     @ApiOperation("method to add employee")
-    public ResponseEntity<?> addEmployee(@Valid Employee employee, BindingResult bindingResult) {
+    public ResponseEntity<?> addEmployee(@Valid Employee employee, BindingResult bindingResult) throws DuplicateEmployeeException, InvalidDateException {
         System.out.println(employee);
         if (bindingResult.hasErrors()) {
             log.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
             log.trace("Invalid employee: " + bindingResult.getAllErrors());
             logCon.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
             return ResponseEntity.ok(collectResponseToInvalidRequest(employee, bindingResult));
+        }else {
+            employeeService.save(employee);
+            return ResponseEntity.ok(employee);
         }
-        employeeService.save(employee);
-        return ResponseEntity.ok(employee);
     }
 
     @GetMapping("/update")
@@ -75,7 +78,7 @@ public class EmployeeRestController {
             return ResponseEntity.ok(collectResponseToInvalidRequest(employee, bindingResult));
         }
         employee.setEmployeeId(id);
-        employeeService.save(employee);
+        employeeService.update(employee);
         log.info("Employee with ID " + id + " changed: " + employee);
         logCon.info("Employee with ID " + id + " changed: " + employee);
         return ResponseEntity.ok(employee);

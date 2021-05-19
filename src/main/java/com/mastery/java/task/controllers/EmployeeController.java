@@ -1,6 +1,8 @@
 package com.mastery.java.task.controllers;
 
 import com.mastery.java.task.dto.Employee;
+import com.mastery.java.task.exceptions.DuplicateEmployeeException;
+import com.mastery.java.task.exceptions.InvalidDateException;
 import com.mastery.java.task.service.EmployeeService;
 import okhttp3.*;
 
@@ -58,7 +60,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/add")
-    public String employeeAdd(@Valid Employee employee, BindingResult bindingResult, Model model) {
+    public String employeeAdd(@Valid Employee employee, BindingResult bindingResult, Model model) throws DuplicateEmployeeException, InvalidDateException {
         if(bindingResult.hasErrors()) {
             log.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
             log.trace("Invalid employee: " + bindingResult.getAllErrors());

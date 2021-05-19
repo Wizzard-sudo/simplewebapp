@@ -10,11 +10,15 @@ import javax.jms.Queue;
 @Component
 public class MessageCreator implements CommandLineRunner {
 
-    @Autowired
-    private JmsMessagingTemplate jmsMessagingTemplate;
+    private final JmsMessagingTemplate jmsMessagingTemplate;
+
+    private final Queue queue;
 
     @Autowired
-    private Queue queue;
+    public MessageCreator(JmsMessagingTemplate jmsMessagingTemplate, Queue queue) {
+        this.jmsMessagingTemplate = jmsMessagingTemplate;
+        this.queue = queue;
+    }
 
     @Override
     public void run(String... args) throws Exception {

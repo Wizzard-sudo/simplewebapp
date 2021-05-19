@@ -197,6 +197,12 @@ button.btn:hover {
 	color: red;
 }
 
+.error_text {
+	margin-top: 5px;
+	color: red;
+	font-size: 16px;
+}
+
 .input_gender{
 display: none;
 }
