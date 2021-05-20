@@ -21,5 +21,4 @@ public interface EmployeeDao extends JpaRepository<Employee, Integer> {
                                        @Param("jobTitle") String jobTitle,
                                        @Param("gender") String gender,
                                        @Param("dateOfBirth") LocalDate dateOfBirth);
-
 }
