@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,15 +22,12 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebMvcTest(controllers = EmployeeController.class)
-public class EmployeeControllerTest {
+@WebMvcTest(EmployeeRestController.class)
+public class EmployeeRestControllerTest {
 
     @MockBean
     EmployeeService service;
@@ -49,25 +45,36 @@ public class EmployeeControllerTest {
     private final LocalDate date = LocalDate.of(1998, 02, 02);
 
     @Test
-    public void addViewEmployeeTest() throws Exception {
-
-        this.mockMvc.perform(get("/add")).andDo(print())
-                .andExpect(status().isOk()).andExpect(view().name("employee-add"));
+    public void getAllEmployeeTest() throws Exception {
+        employeeList = stubEmployeeList();
+        when(service.getAll()).thenReturn(employeeList);
+        this.mockMvc.perform(get("/api/getAll")).andDo(print())
+                .andExpect(status().isOk());
+        then(service).should().getAll();
     }
 
     @Test
-    public void addPostEmployeeTest() throws Exception {
+    public void getByIdEmployeeTest() throws Exception {
+        Employee employee = stubEmployee();
+        int id = employee.getEmployeeId();
+        when(service.getById(id)).thenReturn(employee);
+        this.mockMvc.perform(get("/api/getById")
+                .param("id", employee.getEmployeeId().toString())).andDo(print())
+                .andExpect(status().isOk());
+        then(service).should().getById(id);
+    }
 
+    @Test
+    public void addEmployeeTest() throws Exception {
         Employee employee = stubEmployeeWithoutId();
 
-        this.mockMvc.perform(post("/add")
+        this.mockMvc.perform(get("/api/add")
                 .param("firstName", employee.getFirstName())
                 .param("lastName", employee.getLastName())
                 .param("departamentId", String.valueOf(employee.getDepartamentId()))
                 .param("jobTitle", employee.getJobTitle())
                 .param("gender", employee.getGender())
-                .param("dateOfBirth", String.valueOf(employee.getDateOfBirth()))).andDo(print())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
+                .param("dateOfBirth", String.valueOf(employee.getDateOfBirth()))).andDo(print());
 
         assertEquals(firstName, employee.getFirstName());
         assertEquals(lastName, employee.getLastName());
@@ -78,52 +85,20 @@ public class EmployeeControllerTest {
         then(service).should().save(any(Employee.class));
     }
 
-
-    @Test
-    public void getAllEmployeeTest() throws Exception {
-        employeeList = stubEmployeeList();
-        when(service.getAll()).thenReturn(employeeList);
-        this.mockMvc.perform(get("/")).andDo(print())
-                .andExpect(status().isOk()).andExpect(view().name("home"));
-        then(service).should().getAll();
-    }
-
-
-    @Test
-    public void getByIdEmployeeTest() throws Exception {
-        Employee employee = stubEmployee();
-        int id = employee.getEmployeeId();
-        when(service.getById(id)).thenReturn(employee);
-        this.mockMvc.perform(get("/get/" + id)).andDo(print())
-                .andExpect(status().isOk()).andExpect(view().name("employee-details"));
-
-        then(service).should().getById(id);
-    }
-
     @Test
     public void updateEmployeeTest() throws Exception {
         Employee employee = stubEmployee();
         int id = employee.getEmployeeId();
         when(service.getById(id)).thenReturn(employee);
-        this.mockMvc.perform(get("/" + id + "/edit")).andDo(print())
-                .andExpect(status().isOk()).andExpect(view().name("employee-edit"));
-        then(service).should().getById(id);
-    }
 
-    @Test
-    public void updateEmployeePostTest() throws Exception {
-        Employee employee = stubEmployee();
-        int id = employee.getEmployeeId();
-        when(service.getById(id)).thenReturn(employee);
-
-        this.mockMvc.perform(post("/" + id + "/edit")
+        this.mockMvc.perform(get("/api/update")
+                .param("id", employee.getEmployeeId().toString())
                 .param("firstName", employee.getFirstName())
                 .param("lastName", employee.getLastName())
                 .param("departamentId", String.valueOf(employee.getDepartamentId()))
                 .param("jobTitle", employee.getJobTitle())
                 .param("gender", String.valueOf(employee.getGender()))
-                .param("dateOfBirth", String.valueOf(employee.getDateOfBirth()))).andDo(print())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
+                .param("dateOfBirth", String.valueOf(employee.getDateOfBirth()))).andDo(print());
         then(service).should().update(employee);
     }
 
@@ -131,8 +106,7 @@ public class EmployeeControllerTest {
     public void deleteEmployeeTest() throws Exception {
         Employee employee = stubEmployee();
         int id = employee.getEmployeeId();
-        this.mockMvc.perform(post("/" + id + "/delete")).andDo(print())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
+        this.mockMvc.perform(get("/api/delete").param("id", String.valueOf(id))).andDo(print());
         then(service).should().deleteById(id);
     }
 
@@ -176,5 +150,4 @@ public class EmployeeControllerTest {
                 .dateOfBirth(date).build();
         return employee;
     }
-
 }
