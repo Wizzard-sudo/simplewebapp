@@ -5,12 +5,12 @@ import com.mastery.java.task.exceptions.DuplicateEmployeeException;
 import com.mastery.java.task.exceptions.InvalidDateException;
 import com.mastery.java.task.service.EmployeeService;
 import okhttp3.*;
-
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-
+import javax.jms.Queue;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -31,15 +31,19 @@ public class EmployeeController {
     private static final Logger log = Logger.getLogger(EmployeeController.class);
     private static final Log logCon = LogFactory.getLog(EmployeeController.class);
     private String logLevel = "INFO";
+    private final JmsMessagingTemplate jmsMessagingTemplate;
+    private final Queue queue;
 
     @ModelAttribute("loglevel")
-    public void addAttributeLogLevel(Model model){
+    public void addAttributeLogLevel(Model model) {
         model.addAttribute("loglevel", logLevel);
     }
 
     @Autowired
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, JmsMessagingTemplate jmsMessagingTemplate, Queue queue) {
         this.employeeService = employeeService;
+        this.jmsMessagingTemplate = jmsMessagingTemplate;
+        this.queue = queue;
     }
 
     @GetMapping(value = "/")
@@ -61,7 +65,7 @@ public class EmployeeController {
 
     @PostMapping("/add")
     public String employeeAdd(@Valid Employee employee, BindingResult bindingResult, Model model) throws DuplicateEmployeeException, InvalidDateException {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
             log.trace("Invalid employee: " + bindingResult.getAllErrors());
             logCon.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
@@ -85,7 +89,7 @@ public class EmployeeController {
 
     @PostMapping("/{id}/delete")
     public String employeeDelete(@PathVariable(value = "id") int id) {
-        employeeService.deleteById(id);
+        this.jmsMessagingTemplate.convertAndSend(this.queue, String.valueOf(id));
         log.info("Employee with ID " + id + " deleted");
         logCon.info("Employee with ID " + id + " deleted");
         return "redirect:/";
@@ -103,7 +107,7 @@ public class EmployeeController {
     public String employeeUpdate(@PathVariable(value = "id") int id,
                                  @Valid Employee employee, BindingResult bindingResult, Model model) {
         employee.setEmployeeId(id);
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             model.addAttribute("employee", employee);
             log.warn("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
             log.debug("Invalid employee: " + bindingResult.getAllErrors());
@@ -134,13 +138,18 @@ public class EmployeeController {
         return "redirect:/";
     }
 
-    public Level getLevelLog4j(String logLevel){
-        switch (logLevel){
-            case "TRACE": return Level.TRACE;
-            case "DEBUG": return Level.DEBUG;
-            case "WARN": return Level.WARN;
-            case "ERROR": return Level.ERROR;
-            default: return Level.INFO;
+    public Level getLevelLog4j(String logLevel) {
+        switch (logLevel) {
+            case "TRACE":
+                return Level.TRACE;
+            case "DEBUG":
+                return Level.DEBUG;
+            case "WARN":
+                return Level.WARN;
+            case "ERROR":
+                return Level.ERROR;
+            default:
+                return Level.INFO;
         }
     }
 }

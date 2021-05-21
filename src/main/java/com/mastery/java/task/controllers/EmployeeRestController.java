@@ -11,6 +11,7 @@ import org.apache.juli.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.jms.Queue;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -29,11 +31,17 @@ public class EmployeeRestController {
     private static final Logger log = Logger.getLogger(EmployeeRestController.class);
     private static final Log logCon = LogFactory.getLog(EmployeeRestController.class);
     private final EmployeeService employeeService;
+    private final JmsMessagingTemplate jmsMessagingTemplate;
+    private final Queue queue;
+
+    public EmployeeRestController(EmployeeService employeeService, JmsMessagingTemplate jmsMessagingTemplate, Queue queue) {
+        this.employeeService = employeeService;
+        this.jmsMessagingTemplate = jmsMessagingTemplate;
+        this.queue = queue;
+    }
 
     @Autowired
-    public EmployeeRestController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
-    }
+
 
     @GetMapping("/getAll")
     @ApiOperation("method to get all employees")
@@ -88,7 +96,7 @@ public class EmployeeRestController {
     @ApiOperation("method to delete employee by id")
     public ResponseEntity<Employee> deleteEmployee(@RequestParam("id") Integer id) {
         Employee employee = employeeService.getById(id);
-        employeeService.deleteById(id);
+        this.jmsMessagingTemplate.convertAndSend(this.queue, String.valueOf(id));
         log.info("Employee with ID " + id + " deleted");
         logCon.info("Employee with ID " + id + " deleted");
         return ResponseEntity.ok(employee);

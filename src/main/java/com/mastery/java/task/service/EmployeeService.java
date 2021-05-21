@@ -5,6 +5,7 @@ import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.exceptions.DuplicateEmployeeException;
 import com.mastery.java.task.exceptions.InvalidDateException;
 import org.springframework.data.domain.Sort;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -46,6 +47,7 @@ public class EmployeeService {
     }
 
 
+    @JmsListener(destination = "simplewebapp.queue")
     public void deleteById(int id) {
         employeeDao.deleteById(id);
     }
