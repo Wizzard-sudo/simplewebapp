@@ -3,15 +3,19 @@ package com.mastery.java.task.controllers;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.dto.Gender;
 import com.mastery.java.task.service.EmployeeService;
+import org.apache.activemq.command.ActiveMQQueue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import javax.jms.Queue;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +39,11 @@ public class EmployeeControllerTest {
 
     @MockBean
     EmployeeService service;
+
+    @MockBean
+    JmsMessagingTemplate jmsMessagingTemplate;
+    @MockBean
+    Queue queue;
 
     @Autowired
     private MockMvc mockMvc;
@@ -133,7 +142,7 @@ public class EmployeeControllerTest {
         int id = employee.getEmployeeId();
         this.mockMvc.perform(post("/" + id + "/delete")).andDo(print())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/"));
-        then(service).should().deleteById(id);
+        then(jmsMessagingTemplate).should().convertAndSend(queue, String.valueOf(id));
     }
 
     private List<Employee> stubEmployeeList() {
