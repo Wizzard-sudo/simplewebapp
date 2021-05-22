@@ -38,6 +38,9 @@ public class EmployeeController {
     public void addAttributeLogLevel(Model model) {
         model.addAttribute("loglevel", logLevel);
     }
+    @ModelAttribute("employees")
+    public void getAllEmployees(Model model){List<Employee> employees = employeeService.getAll();
+        model.addAttribute("employees", employees);}
 
     @Autowired
     public EmployeeController(EmployeeService employeeService, JmsMessagingTemplate jmsMessagingTemplate, Queue queue) {
@@ -47,10 +50,8 @@ public class EmployeeController {
     }
 
     @GetMapping(value = "/")
-    public String home(Model model) {
+    public String home() {
         logCon.trace("Getting all employees from the database");
-        List<Employee> employees = employeeService.getAll();
-        model.addAttribute("employees", employees);
         log.info("Go to the main page");
         logCon.info("Go to the main page");
         return "home";
@@ -88,10 +89,11 @@ public class EmployeeController {
     }
 
     @PostMapping("/{id}/delete")
-    public String employeeDelete(@PathVariable(value = "id") int id) {
+    public String employeeDelete(@PathVariable(value = "id") int id) throws InterruptedException {
         this.jmsMessagingTemplate.convertAndSend(this.queue, String.valueOf(id));
         log.info("Employee with ID " + id + " deleted");
         logCon.info("Employee with ID " + id + " deleted");
+        Thread.sleep(50);
         return "redirect:/";
     }
 

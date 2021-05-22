@@ -34,14 +34,12 @@ public class EmployeeRestController {
     private final JmsMessagingTemplate jmsMessagingTemplate;
     private final Queue queue;
 
+    @Autowired
     public EmployeeRestController(EmployeeService employeeService, JmsMessagingTemplate jmsMessagingTemplate, Queue queue) {
         this.employeeService = employeeService;
         this.jmsMessagingTemplate = jmsMessagingTemplate;
         this.queue = queue;
     }
-
-    @Autowired
-
 
     @GetMapping("/getAll")
     @ApiOperation("method to get all employees")
