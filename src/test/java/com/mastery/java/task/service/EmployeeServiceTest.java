@@ -78,7 +78,7 @@ public class EmployeeServiceTest {
     public void getByIdTest() {
         Employee emp = stubEmployee();
 
-        when(employeeDao.getEmployeeByEmployeeId(employeeId)).thenReturn(emp);
+        when(employeeDao.findById(employeeId)).thenReturn(java.util.Optional.of(emp));
 
         Employee employee = employeeService.getById(employeeId);
 
@@ -89,7 +89,7 @@ public class EmployeeServiceTest {
         assertEquals(emp.getGender(), employee.getGender());
         assertEquals(emp.getDateOfBirth(), employee.getDateOfBirth());
 
-        then(employeeDao).should().getEmployeeByEmployeeId(employeeId);
+        then(employeeDao).should().findById(employeeId);
     }
 
     @Test

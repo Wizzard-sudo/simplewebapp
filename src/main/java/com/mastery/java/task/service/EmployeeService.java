@@ -22,23 +22,23 @@ public class EmployeeService {
 
     public void save(Employee employee) throws DuplicateEmployeeException, InvalidDateException {
         if (getExistingEmployeeId(employee) != null) {
-            throw new DuplicateEmployeeException(employee, getExistingEmployeeId(employee), "Ошибка: Дублирование пользователя. Пользователь с такими данными существует - id " + getExistingEmployeeId(employee));
-        }else {
-            if(employee.getDateOfBirth().isAfter(LocalDate.now())){
-                throw new InvalidDateException("Ошибка: Дата из будущего, введите корректную дату");
-            }else {
+            throw new DuplicateEmployeeException(employee, getExistingEmployeeId(employee), "Error: Duplicate user. A user with such data exists - id " + getExistingEmployeeId(employee));
+        } else {
+            if (employee.getDateOfBirth().isAfter(LocalDate.now())) {
+                throw new InvalidDateException("Error: Date from the future, enter the correct date");
+            } else {
                 employeeDao.save(employee);
             }
         }
     }
 
-    private Integer getExistingEmployeeId(Employee employee){
+    private Integer getExistingEmployeeId(Employee employee) {
         return employeeDao.getExistingEmployee(employee.getFirstName(),
                 employee.getLastName(), employee.getDepartamentId(), employee.getJobTitle(), employee.getGender(), employee.getDateOfBirth());
     }
 
     public Employee getById(int id) {
-        return employeeDao.getEmployeeByEmployeeId(id);
+        return employeeDao.findById(id).get();
     }
 
 

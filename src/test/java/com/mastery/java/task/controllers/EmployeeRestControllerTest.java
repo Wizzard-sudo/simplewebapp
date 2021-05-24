@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,7 +54,7 @@ public class EmployeeRestControllerTest {
     public void getAllEmployeeTest() throws Exception {
         employeeList = stubEmployeeList();
         when(service.getAll()).thenReturn(employeeList);
-        this.mockMvc.perform(get("/api/getAll")).andDo(print())
+        this.mockMvc.perform(get("/api/employees")).andDo(print())
                 .andExpect(status().isOk());
         then(service).should().getAll();
     }
@@ -64,8 +64,7 @@ public class EmployeeRestControllerTest {
         Employee employee = stubEmployee();
         int id = employee.getEmployeeId();
         when(service.getById(id)).thenReturn(employee);
-        this.mockMvc.perform(get("/api/getById")
-                .param("id", employee.getEmployeeId().toString())).andDo(print())
+        this.mockMvc.perform(get("/api/employee/" + id)).andDo(print())
                 .andExpect(status().isOk());
         then(service).should().getById(id);
     }
@@ -74,7 +73,7 @@ public class EmployeeRestControllerTest {
     public void addEmployeeTest() throws Exception {
         Employee employee = stubEmployeeWithoutId();
 
-        this.mockMvc.perform(get("/api/add")
+        this.mockMvc.perform(get("/api/employee")
                 .param("firstName", employee.getFirstName())
                 .param("lastName", employee.getLastName())
                 .param("departamentId", String.valueOf(employee.getDepartamentId()))
@@ -97,22 +96,24 @@ public class EmployeeRestControllerTest {
         int id = employee.getEmployeeId();
         when(service.getById(id)).thenReturn(employee);
 
-        this.mockMvc.perform(get("/api/update")
-                .param("id", employee.getEmployeeId().toString())
+        this.mockMvc.perform(put("/api/employee/" + id)
+
                 .param("firstName", employee.getFirstName())
                 .param("lastName", employee.getLastName())
                 .param("departamentId", String.valueOf(employee.getDepartamentId()))
                 .param("jobTitle", employee.getJobTitle())
                 .param("gender", String.valueOf(employee.getGender()))
                 .param("dateOfBirth", String.valueOf(employee.getDateOfBirth()))).andDo(print());
-        then(service).should().update(employee);
+
+        then(service).should().update(any(Employee.class));
     }
 
     @Test
     public void deleteEmployeeTest() throws Exception {
         Employee employee = stubEmployee();
         int id = employee.getEmployeeId();
-        this.mockMvc.perform(get("/api/delete").param("id", String.valueOf(id))).andDo(print());
+        when(service.getById(id)).thenReturn(employee);
+        this.mockMvc.perform(delete("/api/employee/" + id)).andDo(print());
         then(jmsMessagingTemplate).should().convertAndSend(queue, String.valueOf(id));
     }
 
