@@ -6,6 +6,8 @@ import com.mastery.java.task.exceptions.InvalidDateException;
 import com.mastery.java.task.service.EmployeeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -46,15 +48,16 @@ public class EmployeeRestController {
         return ResponseEntity.ok(employee);
     }
 
-    @GetMapping("/employee")
+    @PostMapping("/employee")
     @ApiOperation("method to add employee")
-    public ResponseEntity<?> addEmployee(@Valid Employee employee, BindingResult bindingResult) throws DuplicateEmployeeException, InvalidDateException {
+    @ApiResponses({@ApiResponse(code = 201, message = "Employee created"), @ApiResponse(code = 400, message = "Bad request")})
+    public ResponseEntity.BodyBuilder addEmployee(@Valid Employee employee, BindingResult bindingResult) throws DuplicateEmployeeException, InvalidDateException {
         if (bindingResult.hasErrors()) {
             logCon.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
-            return ResponseEntity.ok(collectResponseToInvalidRequest(employee, bindingResult));
+            return ResponseEntity.badRequest();
         } else {
             employeeService.save(employee);
-            return ResponseEntity.ok(employee);
+            return ResponseEntity.status(201);
         }
     }
 
@@ -73,11 +76,12 @@ public class EmployeeRestController {
 
     @DeleteMapping("/employee/{id}")
     @ApiOperation("method to delete employee by id")
-    public ResponseEntity<Employee> deleteEmployee(@PathVariable("id") Integer id) {
+    @ApiResponse(code = 204, message = "Employee deleted")
+    public ResponseEntity.BodyBuilder deleteEmployee(@PathVariable("id") Integer id) {
         Employee employee = employeeService.getById(id);
         this.jmsMessagingTemplate.convertAndSend(this.queue, String.valueOf(id));
         logCon.info("Employee with ID " + id + " deleted");
-        return ResponseEntity.ok(employee);
+        return ResponseEntity.status(204);
     }
 
     public String collectResponseToInvalidRequest(Employee employee, BindingResult bindingResult) {
