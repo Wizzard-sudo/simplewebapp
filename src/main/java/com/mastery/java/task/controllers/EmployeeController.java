@@ -2,14 +2,11 @@ package com.mastery.java.task.controllers;
 
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.exceptions.DuplicateEmployeeException;
-import com.mastery.java.task.exceptions.InvalidDateException;
 import com.mastery.java.task.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.RequestBody;
 import okhttp3.*;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
-import org.apache.log4j.Level;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +20,10 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeeController {
 
     private final EmployeeService employeeService;
-    private static final Log logCon = LogFactory.getLog(EmployeeController.class);
     private String logLevel = "INFO";
     private final JmsMessagingTemplate jmsMessagingTemplate;
     private final Queue queue;
@@ -43,26 +40,26 @@ public class EmployeeController {
 
     @GetMapping(value = "/employees")
     public String home() {
-        logCon.trace("Getting all employees from the database");
-        logCon.info("Go to the main page");
+        log.trace("Getting all employees from the database");
+        log.info("Go to the main page");
         return "home";
     }
 
     @GetMapping("/employee")
     public String employeeAdd(Model model) {
-        logCon.trace("Go to the page for adding an employee");
+        log.trace("Go to the page for adding an employee");
         model.addAttribute("employee", new Employee());
         return "employee-add";
     }
 
     @PostMapping("/employee")
-    public String employeeAdd(@Valid Employee employee, BindingResult bindingResult, Model model) throws DuplicateEmployeeException, InvalidDateException {
+    public String employeeAdd(@Valid Employee employee, BindingResult bindingResult, Model model) throws DuplicateEmployeeException {
         if (bindingResult.hasErrors()) {
-            logCon.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
+            log.info("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
             model.addAttribute("employee", employee);
             return "employee-add";
         }
-        logCon.info("Employee added: " + employee);
+        log.info("Employee added: " + employee);
         employeeService.save(employee);
         return "redirect:/employees";
     }
@@ -70,7 +67,7 @@ public class EmployeeController {
     @GetMapping("/employees/{id}")
     public String employeeDetails(@PathVariable(value = "id") int id, Model model) {
         Employee employee = employeeService.getById(id);
-        logCon.info("Employee with ID " + id + " received: " + employee);
+        log.info("Employee with ID " + id + " received: " + employee);
         model.addAttribute("employee", employee);
         return "employee-details";
     }
@@ -78,7 +75,7 @@ public class EmployeeController {
     @DeleteMapping("/employees/{id}")
     public String employeeDelete(@PathVariable(value = "id") int id) throws InterruptedException {
         this.jmsMessagingTemplate.convertAndSend(this.queue, String.valueOf(id));
-        logCon.info("Employee with ID " + id + " deleted");
+        log.info("Employee with ID " + id + " deleted");
         Thread.sleep(50);
         return "redirect:/employees";
     }
@@ -86,7 +83,7 @@ public class EmployeeController {
     @PatchMapping("/employees/{id}")
     public String employeeEdit(@PathVariable(value = "id") int id, Model model) {
         Employee employee = employeeService.getById(id);
-        logCon.trace("Go to the page for change an employee with id " + id);
+        log.trace("Go to the page for change an employee with id " + id);
         model.addAttribute("employee", employee);
         return "employee-edit";
     }
@@ -97,11 +94,11 @@ public class EmployeeController {
         employee.setEmployeeId(id);
         if (bindingResult.hasErrors()) {
             model.addAttribute("employee", employee);
-            logCon.warn("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
+            log.warn("Invalid employee has " + bindingResult.getFieldErrorCount() + " error");
             return "employee-edit";
         }
         employeeService.update(employee);
-        logCon.info("Employee with ID " + id + " changed: " + employee);
+        log.info("Employee with ID " + id + " changed: " + employee);
         return "redirect:/employees";
     }
 
@@ -117,22 +114,7 @@ public class EmployeeController {
                 .build();
         Response response = client.newCall(request).execute();
         logLevel = level;
-        logCon.error("Logging level changed: " + level);
+        log.error("Logging level changed: " + level);
         return "redirect:/employees";
-    }
-
-    public Level getLevelLog4j(String logLevel) {
-        switch (logLevel) {
-            case "TRACE":
-                return Level.TRACE;
-            case "DEBUG":
-                return Level.DEBUG;
-            case "WARN":
-                return Level.WARN;
-            case "ERROR":
-                return Level.ERROR;
-            default:
-                return Level.INFO;
-        }
     }
 }

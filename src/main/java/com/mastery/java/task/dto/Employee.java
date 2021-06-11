@@ -7,10 +7,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Entity
@@ -22,6 +19,7 @@ import java.time.LocalDate;
 @ApiModel(description = "data model of employee")
 public class Employee {
     @Id
+    @ApiParam(hidden = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
     private Integer employeeId;
@@ -42,5 +40,6 @@ public class Employee {
     @NotNull(message = "it should not be empty")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiParam("format: yyyy-MM-dd")
+    @Past(message = "must contain the past date")
     private LocalDate dateOfBirth;
 }

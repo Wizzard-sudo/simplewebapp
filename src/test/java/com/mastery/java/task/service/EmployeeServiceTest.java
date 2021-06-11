@@ -5,7 +5,6 @@ import com.mastery.java.task.dao.EmployeeDao;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.dto.Gender;
 import com.mastery.java.task.exceptions.DuplicateEmployeeException;
-import com.mastery.java.task.exceptions.InvalidDateException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -47,7 +46,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void saveTest() throws InvalidDateException, DuplicateEmployeeException {
+    public void saveTest() throws DuplicateEmployeeException {
         Employee emp = stubEmployee();
         when(employeeDao.getExistingEmployee(emp.getFirstName(),
                 emp.getLastName(), emp.getDepartamentId(), emp.getJobTitle(), emp.getGender(), emp.getDateOfBirth())).thenReturn(null);
@@ -55,8 +54,8 @@ public class EmployeeServiceTest {
         then(employeeDao).should().save(emp);
     }
 
-    @Test(expected = InvalidDateException.class)
-    public void saveTestWithInvalidDateException() throws InvalidDateException, DuplicateEmployeeException {
+    @Test
+    public void saveTestWithInvalidDateException() throws DuplicateEmployeeException {
         Employee emp = stubEmployee();
         emp.setDateOfBirth(LocalDate.of(2030, 02, 02));
         when(employeeDao.getExistingEmployee(emp.getFirstName(),
@@ -66,7 +65,7 @@ public class EmployeeServiceTest {
     }
 
     @Test(expected = DuplicateEmployeeException.class)
-    public void saveTestWithDuplicateEmployeeException() throws InvalidDateException, DuplicateEmployeeException {
+    public void saveTestWithDuplicateEmployeeException() throws DuplicateEmployeeException {
         Employee emp = stubEmployee();
         when(employeeDao.getExistingEmployee(emp.getFirstName(),
                 emp.getLastName(), emp.getDepartamentId(), emp.getJobTitle(), emp.getGender(), emp.getDateOfBirth())).thenReturn(1);
