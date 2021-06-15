@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -18,6 +19,7 @@ public class EmployeeService {
 
     private final EmployeeDao employeeDao;
 
+    @Transactional
     public void save(Employee employee) throws DuplicateEmployeeException {
         if (getExistingEmployeeId(employee) != null) {
             throw new DuplicateEmployeeException(employee, getExistingEmployeeId(employee), "Error: Duplicate user. A user with such data exists - id " + getExistingEmployeeId(employee));

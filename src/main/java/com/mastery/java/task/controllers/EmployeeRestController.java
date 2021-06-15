@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jms.core.JmsMessagingTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +33,10 @@ public class EmployeeRestController {
 
     @GetMapping("/employees")
     @ApiOperation("method to get all employees")
-    public ResponseEntity<List<Employee>> getAllEmployee() {
+    public List<Employee> getAllEmployee() {
         List<Employee> employees = employeeService.getAll();
-        log.trace("Getting all employees from the database");
-        return ResponseEntity.ok(employees);
+        log.trace("Getting all employees from the database");//добавить количество
+        return employees;
     }
 
     @GetMapping("/employee/{id}")

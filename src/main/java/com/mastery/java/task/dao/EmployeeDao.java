@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 
-@Repository
+//@Repository
 public interface EmployeeDao extends JpaRepository<Employee, Integer> {
 
 
@@ -20,4 +20,6 @@ public interface EmployeeDao extends JpaRepository<Employee, Integer> {
                                        @Param("jobTitle") String jobTitle,
                                        @Param("gender") String gender,
                                        @Param("dateOfBirth") LocalDate dateOfBirth);
+
+    public Employee getEmployeeByFirstNameAndLastName(String name1, String name2);
 }

@@ -19,7 +19,6 @@ import java.time.LocalDate;
 @ApiModel(description = "data model of employee")
 public class Employee {
     @Id
-    @ApiParam(hidden = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
     private Integer employeeId;
@@ -40,6 +39,6 @@ public class Employee {
     @NotNull(message = "it should not be empty")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiParam("format: yyyy-MM-dd")
-    @Past(message = "must contain the past date")
+    @Past
     private LocalDate dateOfBirth;
 }
