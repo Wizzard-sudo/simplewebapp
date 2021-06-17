@@ -4,9 +4,9 @@ import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.exceptions.DuplicateEmployeeException;
 import com.mastery.java.task.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import okhttp3.RequestBody;
 import okhttp3.*;
+import org.apache.log4j.Logger;
 import org.springframework.jms.core.JmsMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,9 +20,9 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@Slf4j
 public class EmployeeController {
 
+    private final Logger log = Logger.getLogger(EmployeeController.class);
     private final EmployeeService employeeService;
     private String logLevel = "INFO";
     private final JmsMessagingTemplate jmsMessagingTemplate;
