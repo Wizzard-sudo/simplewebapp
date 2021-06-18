@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 
-//@Repository
+@Repository
 public interface EmployeeDao extends JpaRepository<Employee, Integer> {
 
 

@@ -1,5 +1,6 @@
 package com.mastery.java.task.dto;
 
+import com.mastery.java.task.validator.Adult;
 import com.mastery.java.task.validator.ValidGender;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiParam;
@@ -40,5 +41,6 @@ public class Employee {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiParam("format: yyyy-MM-dd")
     @Past
+    @Adult
     private LocalDate dateOfBirth;
 }
