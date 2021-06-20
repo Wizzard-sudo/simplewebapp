@@ -17,7 +17,12 @@ public class Simplewebapp {
     }
 
     @Bean
-    public Queue queue() {
-        return new ActiveMQQueue("simplewebapp.queue");
+    public Queue queueDelete() {
+        return new ActiveMQQueue("simplewebapp.queue.delete");
+    }
+
+    @Bean
+    public Queue queueSave() {
+        return new ActiveMQQueue("simplewebapp.queue.save");
     }
 }

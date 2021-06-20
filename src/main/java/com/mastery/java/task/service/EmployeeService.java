@@ -4,10 +4,12 @@ import com.mastery.java.task.dao.EmployeeDao;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.exceptions.DuplicateEmployeeException;
 import com.mastery.java.task.exceptions.MyEmployeeNotFound;
+import org.apache.activemq.Message;
 import org.springframework.data.domain.Sort;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
+import javax.jms.JMSException;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -44,12 +46,18 @@ public class EmployeeService {
     }
 
 
-    @JmsListener(destination = "simplewebapp.queue")
+    @JmsListener(destination = "simplewebapp.queue.delete")
     public void deleteById(int id) {
         employeeDao.deleteById(id);
     }
 
     public List<Employee> getAll() {
         return employeeDao.findAll(Sort.by(Sort.Direction.ASC, "employeeId"));
+    }
+
+    @JmsListener(destination = "simplewebapp.queue.save")
+    @Transactional
+    public void saveAsync(Employee employee) throws DuplicateEmployeeException{
+        save(employee);
     }
 }

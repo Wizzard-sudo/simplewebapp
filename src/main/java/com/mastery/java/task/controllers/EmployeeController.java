@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import okhttp3.RequestBody;
 import okhttp3.*;
 import org.apache.log4j.Logger;
-import org.springframework.jms.core.JmsMessagingTemplate;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,9 +24,9 @@ public class EmployeeController {
 
     private final Logger log = Logger.getLogger(EmployeeController.class);
     private final EmployeeService employeeService;
+    private final JmsTemplate jmsTemplate;
+    private final Queue queueDelete;
     private String logLevel = "INFO";
-    private final JmsMessagingTemplate jmsMessagingTemplate;
-    private final Queue queue;
 
     @ModelAttribute("loglevel")
     public String addAttributeLogLevel() {
@@ -74,7 +74,7 @@ public class EmployeeController {
 
     @DeleteMapping("/employees/{id}")
     public String employeeDelete(@PathVariable(value = "id") int id) throws InterruptedException {
-        this.jmsMessagingTemplate.convertAndSend(this.queue, String.valueOf(id));
+        this.jmsTemplate.convertAndSend(this.queueDelete, String.valueOf(id));
         log.info("Employee with ID " + id + " deleted");
         Thread.sleep(50);
         return "redirect:/employees";

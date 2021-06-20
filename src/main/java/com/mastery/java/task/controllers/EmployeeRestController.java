@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.jms.core.JmsMessagingTemplate;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.jms.Queue;
@@ -25,8 +25,8 @@ import java.util.List;
 public class EmployeeRestController {
 
     private final EmployeeService employeeService;
-    private final JmsMessagingTemplate jmsMessagingTemplate;
-    private final Queue queue;
+    private final JmsTemplate jmsTemplate;
+    private final Queue queueDelete;
 
 
     @GetMapping("/employees")
@@ -78,7 +78,7 @@ public class EmployeeRestController {
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteEmployee(@PathVariable("id") Integer id) {
         employeeService.getById(id);
-        this.jmsMessagingTemplate.convertAndSend(this.queue, String.valueOf(id));
+        this.jmsTemplate.convertAndSend(this.queueDelete, String.valueOf(id));
         log.info("Employee with ID {} deleted", id);
     }
 }
