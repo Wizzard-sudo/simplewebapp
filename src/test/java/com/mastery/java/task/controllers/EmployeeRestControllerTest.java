@@ -3,12 +3,15 @@ package com.mastery.java.task.controllers;
 import com.mastery.java.task.dto.Employee;
 import com.mastery.java.task.dto.Gender;
 import com.mastery.java.task.service.EmployeeService;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jms.core.JmsMessagingTemplate;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,14 +32,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebMvcTest(EmployeeRestController.class)
+
 public class EmployeeRestControllerTest {
 
     @MockBean
     EmployeeService service;
     @MockBean
-    JmsMessagingTemplate jmsMessagingTemplate;
+    JmsTemplate jmsTemplate;
     @MockBean
-    Queue queue;
+    Queue queueDelete;
 
     @Autowired
     private MockMvc mockMvc;
@@ -114,7 +118,7 @@ public class EmployeeRestControllerTest {
         int id = employee.getEmployeeId();
         when(service.getById(id)).thenReturn(employee);
         this.mockMvc.perform(delete("/api/employee/" + id)).andDo(print());
-        then(jmsMessagingTemplate).should().convertAndSend(queue, String.valueOf(id));
+        then(jmsTemplate).should().convertAndSend(queueDelete, String.valueOf(id));
     }
 
     private List<Employee> stubEmployeeList() {

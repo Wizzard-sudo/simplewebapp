@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jms.core.JmsMessagingTemplate;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -36,11 +37,10 @@ public class EmployeeControllerTest {
 
     @MockBean
     EmployeeService service;
-
     @MockBean
-    JmsMessagingTemplate jmsMessagingTemplate;
-    @MockBean
-    Queue queue;
+    JmsTemplate jmsTemplate;
+    @MockBean(name = "simplewebapp.queue.delete")
+    Queue queueDelete;
 
     @Autowired
     private MockMvc mockMvc;
@@ -139,7 +139,7 @@ public class EmployeeControllerTest {
         int id = employee.getEmployeeId();
         this.mockMvc.perform(delete("/employees/" + id)).andDo(print())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/employees"));
-        then(jmsMessagingTemplate).should().convertAndSend(queue, String.valueOf(id));
+        then(jmsTemplate).should().convertAndSend(queueDelete, String.valueOf(id));
     }
 
     private List<Employee> stubEmployeeList() {
