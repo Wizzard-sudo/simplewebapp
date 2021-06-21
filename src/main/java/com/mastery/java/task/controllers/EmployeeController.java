@@ -42,7 +42,6 @@ public class EmployeeController {
     public String home() {
         log.trace("Getting all employees from the database");
         log.info("Go to the main page");
-        log.info("GoGoGo");
         return "home";
     }
 

@@ -37,8 +37,12 @@ public class EmployeeAsyncSaveController {
             @ApiResponse(code = 404, message = "Not Found")})
     @ResponseStatus(code = HttpStatus.CREATED)
     public Employee saveAsyncEmployee(@Valid Employee employee) throws DuplicateEmployeeException {
-        this.jmsTemplate.convertAndSend(this.queueSave, employee);
-        log.info("Added employee: {}", employee);
-        return employee;
+        if(employeeService.getExistingEmployeeId(employee) != null){
+            throw new DuplicateEmployeeException(employee, employeeService.getExistingEmployeeId(employee), "Error: Duplicate user. A user with such data exists - id " + employeeService.getExistingEmployeeId(employee));
+        }else {
+            this.jmsTemplate.convertAndSend(this.queueSave, employee);
+            log.info("Added employee: {}", employee);
+            return employee;
+        }
     }
 }

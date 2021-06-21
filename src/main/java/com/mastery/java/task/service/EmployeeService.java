@@ -31,7 +31,7 @@ public class EmployeeService {
         }
     }
 
-    private Integer getExistingEmployeeId(Employee employee) {
+    public Integer getExistingEmployeeId(Employee employee) {
         return employeeDao.getExistingEmployee(employee.getFirstName(),
                 employee.getLastName(), employee.getDepartamentId(), employee.getJobTitle(), employee.getGender(), employee.getDateOfBirth());
     }
