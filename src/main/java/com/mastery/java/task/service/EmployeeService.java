@@ -58,6 +58,6 @@ public class EmployeeService {
     @JmsListener(destination = "simplewebapp.queue.save")
     @Transactional
     public void saveAsync(Employee employee) throws DuplicateEmployeeException{
-        save(employee);
+        employeeDao.save(employee);
     }
 }

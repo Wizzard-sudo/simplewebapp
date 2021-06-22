@@ -13,7 +13,7 @@ public class ErrorController implements org.springframework.boot.web.servlet.err
     @ResponseBody
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public String handleError() {
-        return "Not Found (404)";
+        return "Custom Not Found (404)";
     }
 
     @Override

@@ -35,12 +35,14 @@
         <b class="b1">Пол: </b><br>
         <label th:classappend="${#fields.hasErrors('gender') ? 'gender_error' : 'gender'}"><input class="input_gender"
                                                                                                   type="radio"
+                                                                                                  required
                                                                                                   th:field="*{gender}"
                                                                                                   value="MALE">
             <div class="stlradio"></div>
             Male</label>
         <label th:classappend="${#fields.hasErrors('gender') ? 'gender_error' : 'gender'}"><input class="input_gender"
                                                                                                   type="radio"
+                                                                                                  required
                                                                                                   th:field="*{gender}"
                                                                                                   value="FEMALE">
             <div class="stlradio"></div>
