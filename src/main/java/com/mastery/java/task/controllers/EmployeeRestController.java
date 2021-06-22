@@ -51,8 +51,7 @@ public class EmployeeRestController {
     @PostMapping("/employee")
     @ApiOperation("method to add employee")
     @ApiResponses({@ApiResponse(code = 201, message = "Employee created"),
-            @ApiResponse(code = 400, message = "Bad request"),
-            @ApiResponse(code = 404, message = "Not Found")})
+            @ApiResponse(code = 400, message = "Bad request")})
     @ResponseStatus(code = HttpStatus.CREATED)
     public Employee addEmployee(@Valid Employee employee) throws DuplicateEmployeeException {
         employeeService.save(employee);
@@ -74,7 +73,8 @@ public class EmployeeRestController {
 
     @DeleteMapping("/employee/{id}")
     @ApiOperation("method to delete employee by id")
-    @ApiResponses({@ApiResponse(code = 204, message = "Employee deleted"), @ApiResponse(code = 404, message = "Not Found")})
+    @ApiResponses({ @ApiResponse(code = 204, message = "Employee deleted"),
+                    @ApiResponse(code = 404, message = "Not Found")})
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteEmployee(@PathVariable("id") Integer id) {
         employeeService.getById(id);
